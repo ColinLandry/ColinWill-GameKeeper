@@ -40,19 +40,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Coach table column names
      */
 
-    public static final String COLUMN_FNAME = "firstName";
-    public static final String COLUMN_LNAME = "lastName";
-    public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_COACHNAME = "name";
+    public static final String COLUMN_COACHEMAIL = "email";
 
     /**
      * Games table column names
      */
 
     public static final String COLUMN_GAMENAME = "name";
-    public static final String COLUMN_COACH = "coach";
-    public static final String COLUMN_TEAM1 = "team1";
-    public static final String COLUMN_TEAM2 = "team2";
-    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_GAMECOACH = "coach";
+    public static final String COLUMN_GAMETEAM1 = "team1";
+    public static final String COLUMN_GAMETEAM2 = "team2";
+    public static final String COLUMN_GAMEDATE = "date";
 
     /**
      * Player table column names
@@ -74,24 +73,67 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Create statements
      */
 
-//    public static final String CREATE_BREEDS_TABLE = "CREATE TABLE " +
-//            TABLE_BREEDS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
-//            + COLUMN_NAME + " TEXT," + COLUMN_DESCRIPTION + " TEXT,"
-//            + COLUMN_IMAGE + " TEXT," + COLUMN_URL + " TEXT)";
+    /**
+     * Player table
+     */
+
+    public static final String CREATE_PLAYER_TABLE = "CREATE TABLE " +
+            TABLE_PLAYERS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_PLAYERNAME + " TEXT,"
+            + COLUMN_PLAYERPHONE + " INTEGER,"
+            + COLUMN_PLAYEREMAIL + " TEXT)";
+
+    /**
+     * Coaches table
+     */
+
+    public static final String CREATE_COACHES_TABLE = "CREATE TABLE " +
+            TABLE_COACHES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_COACHNAME + " TEXT,"
+            + COLUMN_COACHEMAIL + " TEXT)";
+
+    /**
+     * Games table
+     */
+
+    public static final String CREATE_GAMES_TABLE = "CREATE TABLE " +
+            TABLE_GAMES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_GAMENAME + " TEXT,"
+            + COLUMN_GAMEDATE + " DATE,"
+            + COLUMN_GAMECOACH + " INTEGER,"
+            + COLUMN_GAMETEAM1 + " INTEGER,"
+            + COLUMN_GAMETEAM2 + " INTEGER)";
+
+    /**
+     * Teams table
+     * ask Cai how to have an array of players referencing id's in the player table
+     */
+
+    public static final String CREATE_TEAMS_TABLE =  "CREATE TABLE " +
+            TABLE_TEAMS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_TEAMNAME + " TEXT,"
+            + COLUMN_TEAMPLAYERS + " MULTISET,"
+            + COLUMN_TEAMCOACH + " INTEGER)";
 
     public DatabaseHandler(Context context){
         super(context, DATABASE_NAME, null , DATABASE_VERSION);
     }
 
-//    @Override
-//    public void onCreate(SQLiteDatabase db) {
-//        db.execSQL(CREATE_BREEDS_TABLE);
-//    }
-//
-//    @Override
-//    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BREEDS);
-//    }
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_COACHES_TABLE);
+        db.execSQL(CREATE_GAMES_TABLE);
+        db.execSQL(CREATE_PLAYER_TABLE);
+        db.execSQL(CREATE_TEAMS_TABLE);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COACHES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
+    }
 
     /**
      * CRUD Operations
