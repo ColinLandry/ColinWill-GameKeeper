@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,11 +81,47 @@ public class upcomingGamesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_upcoming_games, container, false);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.gamesViewPager);
         //Set the adapter
-
+        final CustomPagerAdapter adapter = new CustomPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(adapter);
         //Setting the page transformer
 
         return view;
 
+    }
+
+    /**
+     * The Custom Page Adapter which extends the FragmentAdapter
+     * Contains a switch statement which changes based on pager location
+     */
+    public class CustomPagerAdapter extends FragmentPagerAdapter {
+
+        public CustomPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            //Requires param1 String and param2 int
+            switch (position){
+                case 0:
+                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+                case 1:
+                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+                case 2:
+                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+                case 3:
+                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+                case 4:
+                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+                default:
+                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 5;
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
