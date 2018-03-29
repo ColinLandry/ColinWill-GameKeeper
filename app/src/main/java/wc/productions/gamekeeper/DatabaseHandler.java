@@ -48,7 +48,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
 
     public static final String COLUMN_GAMENAME = "name";
-    public static final String COLUMN_GAMECOACH = "coach";
     public static final String COLUMN_GAMETEAM1 = "team1";
     public static final String COLUMN_GAMETEAM2 = "team2";
     public static final String COLUMN_GAMEDATE = "date";
@@ -106,12 +105,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             TABLE_GAMES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_GAMENAME + " TEXT,"
             + COLUMN_GAMEDATE + " DATE,"
-            + COLUMN_GAMECOACH + " INTEGER,"
             + COLUMN_GAMETEAM1 + " INTEGER,"
             + COLUMN_GAMETEAM2 + " INTEGER,"
             + " CONSTRAINT team1_FK FOREIGN KEY (" + COLUMN_GAMETEAM1 + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
-            + " CONSTRAINT team2_FK FOREIGN KEY (" + COLUMN_GAMETEAM2 + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
-            + " CONSTRAINT gamecoach_FK FOREIGN KEY (" + COLUMN_GAMECOACH + ") REFERENCES " + TABLE_COACHES + "(" + COLUMN_ID + "))";
+            + " CONSTRAINT team2_FK FOREIGN KEY (" + COLUMN_GAMETEAM2 + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "))";
 
     /**
      * Teams table
@@ -177,6 +174,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_PLAYERS, null, values);
         db.close();
     }
-    
+
+    /**
+     * Create coach
+     */
+
+    public void addCoach(Coach coach){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLAYERNAME, coach.getName());
+        values.put(COLUMN_PLAYEREMAIL, coach.getEmail());
+        db.insert(TABLE_PLAYERS, null, values);
+        db.close();
+    }
 
 }
