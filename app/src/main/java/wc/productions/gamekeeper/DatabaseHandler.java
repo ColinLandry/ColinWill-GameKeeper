@@ -105,10 +105,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             TABLE_GAMES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_GAMENAME + " TEXT,"
             + COLUMN_GAMEDATE + " DATE,"
-            + COLUMN_GAMETEAM1 + " INTEGER,"
-            + COLUMN_GAMETEAM2 + " INTEGER,"
-            + " CONSTRAINT team1_FK FOREIGN KEY (" + COLUMN_GAMETEAM1 + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
-            + " CONSTRAINT team2_FK FOREIGN KEY (" + COLUMN_GAMETEAM2 + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "))";
+            + COLUMN_GAMETEAM1 + " INTEGER REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
+            + COLUMN_GAMETEAM2 + " INTEGER REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "))";
 
     /**
      * Teams table
@@ -117,8 +115,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String CREATE_TEAMS_TABLE =  "CREATE TABLE " +
             TABLE_TEAMS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_TEAMNAME + " TEXT,"
-            + COLUMN_TEAMCOACH + " INTEGER,"
-            + " CONSTRAINT teamcoach_FK FOREIGN KEY (" + COLUMN_TEAMCOACH + ") REFERENCES " + TABLE_COACHES + "(" + COLUMN_ID + "))";
+            + COLUMN_TEAMCOACH + " INTEGER REFERENCES " + TABLE_COACHES + "(" + COLUMN_ID + "))";
 
     /**
      * Playerteams table
@@ -126,10 +123,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public static final String CREATE_PLAYERTEAMS_TABLE = "CREATE TABLE " +
             TABLE_PLAYERTEAM + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
-            + COLUMN_PLAYERID + " INTEGER,"
-            + COLUMN_TEAMID + " INTEGER,"
-            + " CONSTRAINT playerid_FK FOREIGN KEY (" + COLUMN_TEAMID + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
-            + " CONSTRAINT teamid_FK FOREIGN KEY (" + COLUMN_PLAYERID + ") REFERENCES " + TABLE_PLAYERS + "(" + COLUMN_ID + "))";
+            + COLUMN_PLAYERID + " INTEGER REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
+            + COLUMN_TEAMID + " INTEGER REFERENCES " + TABLE_PLAYERS + "(" + COLUMN_ID + "))";
 
     public DatabaseHandler(Context context){
         super(context, DATABASE_NAME, null , DATABASE_VERSION);
