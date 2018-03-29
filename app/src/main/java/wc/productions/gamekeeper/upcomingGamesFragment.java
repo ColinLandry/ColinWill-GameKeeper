@@ -84,7 +84,7 @@ public class upcomingGamesFragment extends Fragment {
         final CustomPagerAdapter adapter = new CustomPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         //Setting the page transformer
-
+        viewPager.setPageTransformer(true, new DepthPageTransformer());
         return view;
 
     }
@@ -121,6 +121,39 @@ public class upcomingGamesFragment extends Fragment {
         @Override
         public int getCount() {
             return 5;
+        }
+    }
+
+    public  class DepthPageTransformer implements ViewPager.PageTransformer{
+        private static final float MIN_SCALE = 0.75f;
+
+        /**
+         * transform page method
+         * @param view Required view needed to apply the transformation
+         * @param position current view pager position
+         */
+        public void transformPage(View view, float position){
+            int pageWidth = view.getWidth();
+
+            if (position < -1) {
+                view.setAlpha(0);
+            }else if (position <= 0){
+                view.setAlpha(1);
+                view.setTranslationX(0);
+                view.setScaleX(1);
+                view.setScaleY(1);
+            }else if (position <= 1){
+                view.setAlpha(1 - position);
+
+                view.setTranslationX(pageWidth * -position);
+
+                float scaleFactor = MIN_SCALE + (1 - MIN_SCALE)
+                        * (1 - Math.abs(position));
+                view.setScaleX(scaleFactor);
+                view.setScaleY(scaleFactor);
+            }else {
+                view.setAlpha(0);
+            }
         }
     }
 
