@@ -6,7 +6,6 @@ package wc.productions.gamekeeper;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -160,5 +159,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * CRUD Operations
      */
+
+    /**
+     * CREATE Operations
+     */
+
+    /**
+     * Create player
+     */
+
+    public void addPlayer(Player player){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLAYERNAME, player.getName());
+        values.put(COLUMN_PLAYERPHONE, player.getPhone());
+        values.put(COLUMN_PLAYEREMAIL, player.getEmail());
+        db.insert(TABLE_PLAYERS, null, values);
+        db.close();
+    }
+    
 
 }
