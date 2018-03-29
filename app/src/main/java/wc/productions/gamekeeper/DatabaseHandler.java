@@ -188,4 +188,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Create team
+     */
+
+    public void addTeam(Team team){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEAMNAME, team.getName());
+        values.put(COLUMN_TEAMCOACH, team.getCoach().getId());
+        db.insert(TABLE_TEAMS, null, values);
+        db.close();
+    }
+
 }
