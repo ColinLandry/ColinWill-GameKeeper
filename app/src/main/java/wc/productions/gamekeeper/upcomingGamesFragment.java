@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,7 @@ public class upcomingGamesFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    FragmentManager fm;
     @Override
     /**
      * Detach the view and return it at the end
@@ -73,12 +74,26 @@ public class upcomingGamesFragment extends Fragment {
      * Create the left and right chevron buttons
      * Set on click listeners which check the location of the pager
      * This allows us to create an infinite scroll.
+     * Activate the fab button and change it's function to allow them to schedule games
      */
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_upcoming_games, container, false);
+        fm = getActivity().getSupportFragmentManager();
+        MainActivity.fab.setImageResource(R.drawable.ic_add_black_24dp);
+        MainActivity.fab.show();
+        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.main_content, new CreateGameFragment());
+                ft.commit();
+            }
+        });
+
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.gamesViewPager);
         //Set the adapter
         final CustomPagerAdapter adapter = new CustomPagerAdapter(getChildFragmentManager());

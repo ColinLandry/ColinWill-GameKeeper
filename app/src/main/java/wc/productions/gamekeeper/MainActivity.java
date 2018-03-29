@@ -18,7 +18,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, upcomingGamesFragment.OnFragmentInteractionListener,
-        viewPagerItemFragment.OnFragmentInteractionListener{
+        viewPagerItemFragment.OnFragmentInteractionListener,
+        CreateGameFragment.OnFragmentInteractionListener{
 
 
     FragmentManager fm;
