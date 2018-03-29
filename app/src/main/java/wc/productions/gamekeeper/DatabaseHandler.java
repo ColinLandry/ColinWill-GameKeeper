@@ -29,6 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TABLE_GAMES = "games";
     public static final String TABLE_TEAMS = "teams";
     public static final String TABLE_COACHES = "coaches";
+    public static final String TABLE_PLAYERTEAM = "playerteam";
 
     /**
      * Create common column names
@@ -65,9 +66,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Teams table column names
      */
 
-    public static final String COLUMN_TEAMPLAYERS = "players";
     public static final String COLUMN_TEAMNAME = "name";
     public static final String COLUMN_TEAMCOACH = "coach";
+
+    /**
+     * Playerteams table column names
+     */
+
+    public static final String COLUMN_PLAYERID = "playerid";
+    public static final String COLUMN_TEAMID = "teamid";
 
     /**
      * Create statements
@@ -102,18 +109,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             + COLUMN_GAMEDATE + " DATE,"
             + COLUMN_GAMECOACH + " INTEGER,"
             + COLUMN_GAMETEAM1 + " INTEGER,"
-            + COLUMN_GAMETEAM2 + " INTEGER)";
+            + COLUMN_GAMETEAM2 + " INTEGER,"
+            + " CONSTRAINT team1_FK FOREIGN KEY (" + COLUMN_GAMETEAM1 + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
+            + " CONSTRAINT team2_FK FOREIGN KEY (" + COLUMN_GAMETEAM2 + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
+            + " CONSTRAINT gamecoach_FK FOREIGN KEY (" + COLUMN_GAMECOACH + ") REFERENCES " + TABLE_COACHES + "(" + COLUMN_ID + "))";
 
     /**
      * Teams table
-     * ask Cai how to have an array of players referencing id's in the player table
      */
 
     public static final String CREATE_TEAMS_TABLE =  "CREATE TABLE " +
             TABLE_TEAMS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_TEAMNAME + " TEXT,"
-            + COLUMN_TEAMPLAYERS + " MULTISET,"
-            + COLUMN_TEAMCOACH + " INTEGER)";
+            + COLUMN_TEAMCOACH + " INTEGER,"
+            + " CONSTRAINT teamcoach_FK FOREIGN KEY (" + COLUMN_TEAMCOACH + ") REFERENCES " + TABLE_COACHES + "(" + COLUMN_ID + "))";
+
+    /**
+     * Playerteams table
+     */
+
+    public static final String CREATE_PLAYERTEAMS_TABLE = "CREATE TABLE " +
+            TABLE_PLAYERTEAM + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_PLAYERID + " INTEGER,"
+            + COLUMN_TEAMID + " INTEGER,"
+            + " CONSTRAINT playerid_FK FOREIGN KEY (" + COLUMN_TEAMID + ") REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
+            + " CONSTRAINT teamid_FK FOREIGN KEY (" + COLUMN_PLAYERID + ") REFERENCES " + TABLE_PLAYERS + "(" + COLUMN_ID + "))";
 
     public DatabaseHandler(Context context){
         super(context, DATABASE_NAME, null , DATABASE_VERSION);
@@ -125,6 +145,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_GAMES_TABLE);
         db.execSQL(CREATE_PLAYER_TABLE);
         db.execSQL(CREATE_TEAMS_TABLE);
+        db.execSQL(CREATE_PLAYERTEAMS_TABLE);
     }
 
     @Override
@@ -133,6 +154,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COACHES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERTEAM);
     }
 
     /**
