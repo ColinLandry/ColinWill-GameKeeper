@@ -6,8 +6,11 @@ package wc.productions.gamekeeper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -210,6 +213,61 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_GAMES, null, values);
         db.close();
     }
+
+    /**
+     * RETRIEVE Operations
+     */
+
+    //Retrieve all games
+    public ArrayList<Game> getAllGames(){
+        ArrayList<Game> gameList = new ArrayList<Game>();
+        String query = "SELECT * FROM " + TABLE_GAMES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                gameList.add(new Game(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        Integer.parseInt(cursor.getString(3)),
+                        Integer.parseInt(cursor.getString(4))));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return gameList;
+    }
+
+    //Retrieve one game
+    public Game getGame(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Game game = null;
+        Cursor cursor = db.query(TABLE_GAMES,
+                new String[]{COLUMN_ID, COLUMN_GAMENAME, COLUMN_GAMEDATE, COLUMN_GAMETEAM1, COLUMN_GAMETEAM2},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            game = new Game(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    Integer.parseInt(cursor.getString(3)),
+                    Integer.parseInt(cursor.getString(4)));
+        }
+        db.close();
+        return game;
+    }
+    //Retrieve all players
+
+    //Retrieve one player
+
+    //Retrieve all teams
+
+    //Retrieve one team
+
+    //Retrieve all coaches
+
+    //Retrieve one coach
 
     /**
      * DELETE Operations
