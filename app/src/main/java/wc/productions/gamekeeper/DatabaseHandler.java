@@ -104,7 +104,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String CREATE_GAMES_TABLE = "CREATE TABLE " +
             TABLE_GAMES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_GAMENAME + " TEXT,"
-            + COLUMN_GAMEDATE + " DATE,"
+            + COLUMN_GAMEDATE + " TEXT,"
             + COLUMN_GAMETEAM1 + " INTEGER REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
             + COLUMN_GAMETEAM2 + " INTEGER REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "))";
 
@@ -208,6 +208,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_GAMETEAM1, team1.getId());
         values.put(COLUMN_GAMETEAM2, team2.getId());
         db.insert(TABLE_GAMES, null, values);
+        db.close();
+    }
+
+    /**
+     * DELETE Operations
+     */
+
+    //Delete game
+
+    public void deleteGame(int game){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_GAMES, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(game)});
+        db.close();
+    }
+
+    //Delete coach
+
+    public void deleteCoach(int coach){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_COACHES, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(coach)});
+        db.close();
+    }
+
+    //Delete player
+
+    public void deletePlayer(int player){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_PLAYERS, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(player)});
+        db.close();
+    }
+
+    //Delete team
+
+    public void deleteTeam(int team){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_TEAMS, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(team)});
         db.close();
     }
 
