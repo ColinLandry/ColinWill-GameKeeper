@@ -339,8 +339,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Retrieve all coaches
+    public ArrayList<Coach> getAllCoaches(){
+        ArrayList<Coach> coachList = new ArrayList<Coach>();
+        String query = "SELECT * FROM " + TABLE_COACHES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                coachList.add(new Coach(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2)));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return coachList;
+    }
 
     //Retrieve one coach
+    public Coach getCoach(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Coach coach = null;
+        Cursor cursor = db.query(TABLE_COACHES,
+                new String[]{COLUMN_ID, COLUMN_COACHNAME, COLUMN_COACHEMAIL},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            coach = new Coach(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2));
+        }
+        db.close();
+        return coach;
+    }
 
     /**
      * DELETE Operations
