@@ -194,7 +194,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_TEAMNAME, team.getName());
-        values.put(COLUMN_TEAMCOACH, team.getCoach().getId());
+        values.put(COLUMN_TEAMCOACH, team.getCoach());
         db.insert(TABLE_TEAMS, null, values);
         db.close();
     }
@@ -296,9 +296,47 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return player;
     }
 
+    /**
+     * Dont know how to grab and populate arraylist of players from database, might need to make a
+     * loop to grab from tableplayers team where id is equal to team id
+     *
+     * maybe use addplayertoteam function matching id
+     */
     //Retrieve all teams
+    public ArrayList<Team> getAllTeams(){
+        ArrayList<Team> teamList = new ArrayList<Team>();
+        String query = "SELECT * FROM " + TABLE_TEAMS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                teamList.add(new Team(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2))));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return teamList;
+    }
 
     //Retrieve one team
+    public Team getTeam(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Team team = null;
+        Cursor cursor = db.query(TABLE_TEAMS,
+                new String[]{COLUMN_ID, COLUMN_TEAMNAME, COLUMN_TEAMCOACH},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            team = new Team(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    Integer.parseInt(cursor.getString(2)));
+        }
+        db.close();
+        return team;
+    }
 
     //Retrieve all coaches
 

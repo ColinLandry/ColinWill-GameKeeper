@@ -9,15 +9,15 @@ import java.util.ArrayList;
 public class Team {
     private int id;
     private String name;
-    private Coach coach;
+    private int coach;
     private ArrayList<Player> playerList;
 
-    public Team(String name, Coach coach){
+    public Team(String name, int coach){
         this.name = name;
         this.coach = coach;
     }
 
-    public Team(int id, String name, Coach coach){
+    public Team(int id, String name, int coach){
         this.id = id;
         this.name = name;
         this.coach = coach;
@@ -43,11 +43,11 @@ public class Team {
         this.name = name;
     }
 
-    public Coach getCoach() {
+    public int getCoach() {
         return coach;
     }
 
-    public void setCoach(Coach coach) {
+    public void setCoach(int coach) {
         this.coach = coach;
     }
 
