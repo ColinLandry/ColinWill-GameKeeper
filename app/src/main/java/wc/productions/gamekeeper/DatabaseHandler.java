@@ -257,9 +257,44 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
         return game;
     }
+
     //Retrieve all players
+    public ArrayList<Player> getAllPlayers(){
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        String query = "SELECT * FROM " + TABLE_GAMES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                playerList.add(new Player(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getString(3)));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return playerList;
+    }
 
     //Retrieve one player
+    public Player getPlayer(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Player player = null;
+        Cursor cursor = db.query(TABLE_PLAYERS,
+                new String[]{COLUMN_ID, COLUMN_PLAYERNAME, COLUMN_PLAYERPHONE, COLUMN_PLAYEREMAIL},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            player = new Player(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    Integer.parseInt(cursor.getString(2)),
+                    cursor.getString(3));
+        }
+        db.close();
+        return player;
+    }
 
     //Retrieve all teams
 
