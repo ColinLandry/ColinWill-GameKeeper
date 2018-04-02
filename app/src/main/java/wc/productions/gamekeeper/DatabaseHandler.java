@@ -196,4 +196,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Create game
+     */
+
+    public void addGame(String gameName, String date, Team team1, Team team2){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_GAMENAME, gameName);
+        values.put(COLUMN_GAMEDATE, date);
+        values.put(COLUMN_GAMETEAM1, team1.getId());
+        values.put(COLUMN_GAMETEAM2, team2.getId());
+        db.insert(TABLE_GAMES, null, values);
+        db.close();
+    }
+
 }
