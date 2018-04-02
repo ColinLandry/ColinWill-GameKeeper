@@ -6,8 +6,11 @@ package wc.productions.gamekeeper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -104,7 +107,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String CREATE_GAMES_TABLE = "CREATE TABLE " +
             TABLE_GAMES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_GAMENAME + " TEXT,"
-            + COLUMN_GAMEDATE + " DATE,"
+            + COLUMN_GAMEDATE + " TEXT,"
             + COLUMN_GAMETEAM1 + " INTEGER REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "),"
             + COLUMN_GAMETEAM2 + " INTEGER REFERENCES " + TABLE_TEAMS + "(" + COLUMN_ID + "))";
 
@@ -191,7 +194,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_TEAMNAME, team.getName());
-        values.put(COLUMN_TEAMCOACH, team.getCoach().getId());
+        values.put(COLUMN_TEAMCOACH, team.getCoach());
         db.insert(TABLE_TEAMS, null, values);
         db.close();
     }
@@ -208,6 +211,206 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_GAMETEAM1, team1.getId());
         values.put(COLUMN_GAMETEAM2, team2.getId());
         db.insert(TABLE_GAMES, null, values);
+        db.close();
+    }
+
+    /**
+     * RETRIEVE Operations
+     */
+
+    //Retrieve all games
+    public ArrayList<Game> getAllGames(){
+        ArrayList<Game> gameList = new ArrayList<Game>();
+        String query = "SELECT * FROM " + TABLE_GAMES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                gameList.add(new Game(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        Integer.parseInt(cursor.getString(3)),
+                        Integer.parseInt(cursor.getString(4))));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return gameList;
+    }
+
+    //Retrieve one game
+    public Game getGame(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Game game = null;
+        Cursor cursor = db.query(TABLE_GAMES,
+                new String[]{COLUMN_ID, COLUMN_GAMENAME, COLUMN_GAMEDATE, COLUMN_GAMETEAM1, COLUMN_GAMETEAM2},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            game = new Game(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    Integer.parseInt(cursor.getString(3)),
+                    Integer.parseInt(cursor.getString(4)));
+        }
+        db.close();
+        return game;
+    }
+
+    //Retrieve all players
+    public ArrayList<Player> getAllPlayers(){
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        String query = "SELECT * FROM " + TABLE_GAMES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                playerList.add(new Player(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getString(3)));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return playerList;
+    }
+
+    //Retrieve one player
+    public Player getPlayer(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Player player = null;
+        Cursor cursor = db.query(TABLE_PLAYERS,
+                new String[]{COLUMN_ID, COLUMN_PLAYERNAME, COLUMN_PLAYERPHONE, COLUMN_PLAYEREMAIL},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            player = new Player(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    Integer.parseInt(cursor.getString(2)),
+                    cursor.getString(3));
+        }
+        db.close();
+        return player;
+    }
+
+    /**
+     * Dont know how to grab and populate arraylist of players from database, might need to make a
+     * loop to grab from tableplayers team where id is equal to team id
+     *
+     * maybe use addplayertoteam function matching id
+     */
+    //Retrieve all teams
+    public ArrayList<Team> getAllTeams(){
+        ArrayList<Team> teamList = new ArrayList<Team>();
+        String query = "SELECT * FROM " + TABLE_TEAMS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                teamList.add(new Team(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2))));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return teamList;
+    }
+
+    //Retrieve one team
+    public Team getTeam(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Team team = null;
+        Cursor cursor = db.query(TABLE_TEAMS,
+                new String[]{COLUMN_ID, COLUMN_TEAMNAME, COLUMN_TEAMCOACH},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            team = new Team(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    Integer.parseInt(cursor.getString(2)));
+        }
+        db.close();
+        return team;
+    }
+
+    //Retrieve all coaches
+    public ArrayList<Coach> getAllCoaches(){
+        ArrayList<Coach> coachList = new ArrayList<Coach>();
+        String query = "SELECT * FROM " + TABLE_COACHES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                coachList.add(new Coach(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2)));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return coachList;
+    }
+
+    //Retrieve one coach
+    public Coach getCoach(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Coach coach = null;
+        Cursor cursor = db.query(TABLE_COACHES,
+                new String[]{COLUMN_ID, COLUMN_COACHNAME, COLUMN_COACHEMAIL},
+                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
+                null, null, null, null);
+        if(cursor != null){
+            cursor.moveToFirst();
+            coach = new Coach(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2));
+        }
+        db.close();
+        return coach;
+    }
+
+    /**
+     * DELETE Operations
+     */
+
+    //Delete game
+
+    public void deleteGame(int game){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_GAMES, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(game)});
+        db.close();
+    }
+
+    //Delete coach
+
+    public void deleteCoach(int coach){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_COACHES, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(coach)});
+        db.close();
+    }
+
+    //Delete player
+
+    public void deletePlayer(int player){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_PLAYERS, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(player)});
+        db.close();
+    }
+
+    //Delete team
+
+    public void deleteTeam(int team){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_TEAMS, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(team)});
         db.close();
     }
 
