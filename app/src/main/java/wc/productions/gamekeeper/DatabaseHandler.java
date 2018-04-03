@@ -261,7 +261,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Retrieve all players
     public ArrayList<Player> getAllPlayers(){
         ArrayList<Player> playerList = new ArrayList<Player>();
-        String query = "SELECT * FROM " + TABLE_GAMES;
+        String query = "SELECT * FROM " + TABLE_PLAYERS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.moveToFirst()){
@@ -294,6 +294,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
         return player;
+    }
+
+    /**
+     * Select all from players table where the id matches in the player teams table,
+     * and the id is of the team you input
+     * @param team team that you want to retrieve all players for
+     */
+    //Retrieve all players for a team
+    public Team getAllTeamPlayers(Team team){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE_PLAYERS + " p "
+                + " JOIN " + TABLE_PLAYERTEAM + " t "
+                + " ON p." + COLUMN_ID + " = t." + COLUMN_PLAYERID
+                + " WHERE t." + COLUMN_TEAMID + " = " + team.getId();
+        Cursor cursor = db.rawQuery(sql, null);
+        /**
+         * If cursor is not null, use addplayertoteam method to add every selected player
+         * to that team objects player array
+         */
+        if (cursor != null){
+            do{
+                team.addPlayerToTeam((new Player(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getString(3))));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return team;
     }
 
     /**
