@@ -81,29 +81,11 @@ public class TeamManagementFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_team_management, container, false);
 
-        fm = getActivity().getSupportFragmentManager();
-        MainActivity.fab.setImageResource(R.drawable.ic_add_black_24dp);
-        MainActivity.fab.show();
-        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseHandler db = new DatabaseHandler(getContext());
-                Team test = new Team("Test team", "Test coach name");
-                db.addTeam(test);
-                db.close();
-
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.addToBackStack(null);
-                ft.replace(R.id.content, new TeamManagementFragment());
-                ft.commit();
-            }
-        });
-
         RecyclerView list = view.findViewById(R.id.teamRecyclerList);
 
         //Grab from database
         DatabaseHandler db = new DatabaseHandler(getContext());
-        ArrayList<Team> teamList = db.getAllTeams();
+        final ArrayList<Team> teamList = db.getAllTeams();
         db.close();
 
         //Create layout manager for animations
@@ -116,8 +98,28 @@ public class TeamManagementFragment extends Fragment {
 
         //Set manager and adapter
         list.setLayoutManager(layoutManager);
-        CustomRecyclerViewAdapter adapter = new CustomRecyclerViewAdapter(getContext(), teamList);
+        final CustomRecyclerViewAdapter adapter = new CustomRecyclerViewAdapter(getContext(), teamList);
         list.setAdapter(adapter);
+
+        /**
+         * Button to create a team, for now only test values input
+         */
+        fm = getActivity().getSupportFragmentManager();
+        MainActivity.fab.setImageResource(R.drawable.ic_add_black_24dp);
+        MainActivity.fab.show();
+        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                Team test = new Team("Test team", "Test coach name");
+                db.addTeam(test);
+                db.close();
+
+                teamList.add(test);
+                adapter.notifyItemInserted(adapter.getItemCount());
+
+            }
+        });
 
         return view;
     }
