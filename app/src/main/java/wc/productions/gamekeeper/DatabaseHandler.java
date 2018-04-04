@@ -315,8 +315,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<Player> getAllTeamPlayers(Team team){
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Player> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE_PLAYERS + " p "
-                + " JOIN " + TABLE_PLAYERTEAM + " t "
+        String sql = "SELECT * FROM " + TABLE_PLAYERS + " AS p "
+                + " JOIN " + TABLE_PLAYERTEAM + " AS t "
                 + " ON p." + COLUMN_ID + " = t." + COLUMN_PLAYERID
                 + " WHERE t." + COLUMN_TEAMID + " = " + team.getId();
         Cursor cursor = db.rawQuery(sql, null);

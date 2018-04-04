@@ -1,14 +1,26 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -57,6 +69,8 @@ public class TeamDetailsFragment extends Fragment {
         }
     }
 
+    FragmentManager fm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,13 +80,149 @@ public class TeamDetailsFragment extends Fragment {
         TextView teamName = view.findViewById(R.id.detailsTeamName);
         TextView coachName = view.findViewById(R.id.detailsCoachName);
 
+        //Set values of title and coach name
         if(team != null){
             teamName.setText(team.getName());
-            coachName.setText("" + team.getCoach());
+            coachName.setText(team.getCoach());
         }
+
+        RecyclerView list = view.findViewById(R.id.playersRecyclerList);
+
+        //Grab from database
+        DatabaseHandler db = new DatabaseHandler(getContext());
+        final ArrayList<Player> playerList = db.getAllTeamPlayers(team);
+        db.close();
+
+        //Create layout manager for animations
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean supportsPredictiveItemAnimations() {
+                return true;
+            }
+        };
+
+        //Set manager and adapter
+        list.setLayoutManager(layoutManager);
+        final CustomRecyclerViewAdapter adapter = new CustomRecyclerViewAdapter(getContext(), playerList);
+        list.setAdapter(adapter);
+
+        /**
+         * Button to create a team, for now only test values input
+         */
+        fm = getActivity().getSupportFragmentManager();
+        MainActivity.fab.setImageResource(R.drawable.ic_add_black_24dp);
+        MainActivity.fab.show();
+        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                Player test = new Player("Name man", 1332221234,"cool@cool.com");
+                db.addPlayer(test, team);
+                db.close();
+
+                playerList.add(test);
+                adapter.notifyItemInserted(adapter.getItemCount());
+
+            }
+        });
 
         return view;
     }
+
+    public class CustomRecyclerViewAdapter extends RecyclerView.Adapter {
+        private ArrayList<Player> players;
+        private Context context;
+
+        public CustomRecyclerViewAdapter(Context c, ArrayList<Player> players){
+            this.players = players;
+            this.context = c;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.player_item_view, null);
+            final CustomViewHolder viewHolder = new CustomViewHolder(view);
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    final int location = viewHolder.getAdapterPosition();
+
+                    //Alert to confirm
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("Are you sure you want to delete " + players.get(location).getName() + "?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //Grab an instance of the database
+                                    DatabaseHandler db = new DatabaseHandler(getContext());
+                                    //Remove the team from the database
+                                    int player = players.get(location).getId();
+                                    db.deletePlayer(player);
+                                    //Close the database
+                                    db.close();
+
+                                    //Refresh
+                                    players.remove(location);
+                                    notifyItemRemoved(location);
+                                }
+                            })
+                            .setNegativeButton("No", null);
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                    return false;
+                }
+            });
+
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            Player player = players.get(position);
+            ((CustomViewHolder) holder).playerName.setText(player.getName());
+            setAnimation(holder.itemView);
+        }
+
+        /**
+         * Animation on each item
+         */
+        public void setAnimation(View view) {
+
+            AlphaAnimation anim2 = new AlphaAnimation(0.0f, 1.0f);
+            anim2.setDuration(700);
+
+            ScaleAnimation anim3 = new ScaleAnimation(0f, 1.0f, 0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim3.setDuration(700);
+
+            AnimationSet animSet = new AnimationSet(true);
+            animSet.addAnimation(anim3);
+            animSet.addAnimation(anim2);
+
+            view.startAnimation(animSet);
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return players.size();
+        }
+
+        class CustomViewHolder extends RecyclerView.ViewHolder{
+            protected TextView playerName;
+
+            /**
+             * Set the holder items to the corresponding view locations
+             * @param view parent view
+             */
+            public CustomViewHolder(View view){
+                super(view);
+                this.playerName = view.findViewById(R.id.playerName);
+            }
+        }
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
