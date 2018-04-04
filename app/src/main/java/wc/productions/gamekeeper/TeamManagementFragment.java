@@ -5,7 +5,10 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,18 +73,53 @@ public class TeamManagementFragment extends Fragment {
         }
     }
 
+    FragmentManager fm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_team_management, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_team_management, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        fm = getActivity().getSupportFragmentManager();
+        MainActivity.fab.setImageResource(R.drawable.ic_add_black_24dp);
+        MainActivity.fab.show();
+        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                Team test = new Team("Test team", 0);
+                db.addTeam(test);
+                db.close();
+
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.content, new TeamManagementFragment());
+                ft.commit();
+            }
+        });
+
+        RecyclerView list = view.findViewById(R.id.teamRecyclerList);
+
+        //Grab from database
+        DatabaseHandler db = new DatabaseHandler(getContext());
+        ArrayList<Team> teamList = db.getAllTeams();
+        db.close();
+
+        //Create layout manager for animations
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean supportsPredictiveItemAnimations() {
+                return true;
+            }
+        };
+
+        //Set manager and adapter
+        list.setLayoutManager(layoutManager);
+        CustomRecyclerViewAdapter adapter = new CustomRecyclerViewAdapter(getContext(), teamList);
+        list.setAdapter(adapter);
+
+        return view;
     }
 
     public class CustomRecyclerViewAdapter extends RecyclerView.Adapter {
@@ -137,7 +175,7 @@ public class TeamManagementFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Team team = teams.get(position);
             ((CustomViewHolder) holder).teamName.setText(team.getName());
-            ((CustomViewHolder) holder).coachName.setText(team.getCoach());
+            ((CustomViewHolder) holder).coachName.setText("" + team.getCoach());
             setAnimation(holder.itemView);
 
         }
@@ -163,7 +201,7 @@ public class TeamManagementFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 0;
+            return teams.size();
         }
 
         class CustomViewHolder extends RecyclerView.ViewHolder{
@@ -177,9 +215,18 @@ public class TeamManagementFragment extends Fragment {
             public CustomViewHolder(View view){
                 super(view);
                 this.teamName = view.findViewById(R.id.teamName);
+                this.coachName = view.findViewById(R.id.coachName);
             }
         }
     }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

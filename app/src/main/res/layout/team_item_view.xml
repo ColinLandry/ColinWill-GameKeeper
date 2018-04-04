@@ -11,4 +11,10 @@
         android:text="Team Name"
         android:textAlignment="center"
         android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/coachName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="coach name" />
 </LinearLayout>

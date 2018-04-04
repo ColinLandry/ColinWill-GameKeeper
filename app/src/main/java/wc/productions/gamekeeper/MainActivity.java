@@ -1,8 +1,11 @@
 package wc.productions.gamekeeper;
 
+import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        TeamManagementFragment.OnFragmentInteractionListener {
+
+    FragmentManager fm;
+    public static FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +29,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        fm = getSupportFragmentManager();
 
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -82,12 +91,21 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
+        //Create fragment transaction
+        android.support.v4.app.FragmentTransaction tr = fm.beginTransaction();
 
+        if (id == R.id.nav_home) {
+            // Handle the home action
+//            tr.replace(R.id.content, new MainFragment());
+//            tr.addToBackStack(null);
+//            tr.commit();
         } else if (id == R.id.nav_games) {
 
         } else if (id == R.id.nav_management) {
-
+            // Handle the home action
+            tr.replace(R.id.content, new TeamManagementFragment());
+            tr.addToBackStack(null);
+            tr.commit();
         } else if (id == R.id.nav_info) {
 
         }
@@ -95,5 +113,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
