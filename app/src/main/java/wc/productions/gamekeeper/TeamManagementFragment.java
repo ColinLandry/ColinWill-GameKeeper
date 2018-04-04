@@ -136,6 +136,18 @@ public class TeamManagementFragment extends Fragment {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_item_view, null);
             final CustomViewHolder viewHolder = new CustomViewHolder(view);
 
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = viewHolder.getAdapterPosition();
+                    TeamDetailsFragment td = TeamDetailsFragment.newInstance(teams.get(position));
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.content, td);
+                    ft.commit();
+                }
+            });
+
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {

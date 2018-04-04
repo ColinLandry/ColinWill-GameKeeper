@@ -18,7 +18,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        TeamManagementFragment.OnFragmentInteractionListener {
+        TeamManagementFragment.OnFragmentInteractionListener,
+        TeamDetailsFragment.OnFragmentInteractionListener {
 
     FragmentManager fm;
     public static FloatingActionButton fab;
