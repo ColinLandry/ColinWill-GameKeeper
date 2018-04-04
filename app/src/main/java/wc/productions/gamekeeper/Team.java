@@ -13,15 +13,15 @@ import java.util.ArrayList;
 public class Team implements Parcelable {
     private int id;
     private String name;
-    private int coach;
+    private String coach;
     private ArrayList<Player> playerList;
 
-    public Team(String name, int coach){
+    public Team(String name, String coach){
         this.name = name;
         this.coach = coach;
     }
 
-    public Team(int id, String name, int coach){
+    public Team(int id, String name, String coach){
         this.id = id;
         this.name = name;
         this.coach = coach;
@@ -47,11 +47,11 @@ public class Team implements Parcelable {
         this.name = name;
     }
 
-    public int getCoach() {
+    public String getCoach() {
         return coach;
     }
 
-    public void setCoach(int coach) {
+    public void setCoach(String coach) {
         this.coach = coach;
     }
 
@@ -72,13 +72,13 @@ public class Team implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.id);
         parcel.writeString(this.name);
-        parcel.writeInt(this.coach);
+        parcel.writeString(this.coach);
     }
 
     protected Team(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
-        this.coach = in.readInt();
+        this.coach = in.readString();
     }
 
     public static final Parcelable.Creator<Team> CREATOR = new Parcelable.Creator<Team>() {

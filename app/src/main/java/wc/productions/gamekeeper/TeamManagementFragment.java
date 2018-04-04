@@ -88,7 +88,7 @@ public class TeamManagementFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DatabaseHandler db = new DatabaseHandler(getContext());
-                Team test = new Team("Test team", 0);
+                Team test = new Team("Test team", "Test coach name");
                 db.addTeam(test);
                 db.close();
 
