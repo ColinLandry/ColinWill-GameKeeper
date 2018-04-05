@@ -116,7 +116,7 @@ public class TeamDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DatabaseHandler db = new DatabaseHandler(getContext());
-                Player test = new Player("Name man", 1332221234,"cool@cool.com");
+                Player test = new Player("Test man", 1332221234,"cool@cool.com");
                 db.addPlayer(test, team);
                 db.close();
 

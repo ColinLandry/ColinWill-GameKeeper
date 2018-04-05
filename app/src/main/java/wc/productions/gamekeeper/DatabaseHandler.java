@@ -319,17 +319,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + " JOIN " + TABLE_PLAYERTEAM + " AS t "
                 + " ON p." + COLUMN_ID + " = t." + COLUMN_PLAYERID
                 + " WHERE t." + COLUMN_TEAMID + " = " + team.getId();
+        System.out.println("Test" + team.getId());
         Cursor cursor = db.rawQuery(sql, null);
         /**
          * If cursor is not null, add to player arraylist
          */
-        if (cursor != null){
+        if (cursor != null && cursor.moveToFirst()){
             do{
                 list.add((new Player(Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
                         Integer.parseInt(cursor.getString(2)),
                         cursor.getString(3))));
             } while (cursor.moveToNext());
+        }
+        for (int i = 0; i < list.size(); i++){
+            System.out.println(list.get(i));
+
         }
         db.close();
         return list;
