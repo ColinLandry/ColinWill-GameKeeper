@@ -8,6 +8,20 @@
 
 
     <TextView
+        android:id="@+id/gameNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:text="Name" />
+
+    <EditText
+        android:id="@+id/gameName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:ems="10" />
+
+    <TextView
         android:id="@+id/firstTeamLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,8 +30,10 @@
 
     <Spinner
         android:id="@+id/firstTeamSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        />
 
     <TextView
         android:id="@+id/secondTeamLabel"
@@ -26,8 +42,8 @@
         android:text="Second Team:" />
 
     <Spinner
-        android:id="@+id/SecondTeamSpinner"
-        android:layout_width="match_parent"
+        android:id="@+id/secondTeamSpinner"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
