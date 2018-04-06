@@ -90,7 +90,7 @@ public class TeamDetailsFragment extends Fragment {
 
         //Grab from database
         DatabaseHandler db = new DatabaseHandler(getContext());
-        final ArrayList<Player> playerList = db.getAllTeamPlayers(team);
+        final ArrayList<Player> playerList = db.getAllTeamPlayers(team.getId());
         db.close();
 
         //Create layout manager for animations
