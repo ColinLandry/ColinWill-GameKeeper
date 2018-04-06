@@ -115,12 +115,12 @@ public class TeamDetailsFragment extends Fragment {
         MainActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseHandler db = new DatabaseHandler(getContext());
-                Player test = new Player("Test man", 1332221234,"cool@cool.com");
-                db.addPlayer(test, team);
-                db.close();
+                CreatePlayerFragment td = CreatePlayerFragment.newInstance(team);
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.main_content, td);
+                ft.commit();
 
-                playerList.add(test);
                 adapter.notifyItemInserted(adapter.getItemCount());
 
             }
@@ -182,26 +182,6 @@ public class TeamDetailsFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Player player = players.get(position);
             ((CustomViewHolder) holder).playerName.setText(player.getName());
-            setAnimation(holder.itemView);
-        }
-
-        /**
-         * Animation on each item
-         */
-        public void setAnimation(View view) {
-
-            AlphaAnimation anim2 = new AlphaAnimation(0.0f, 1.0f);
-            anim2.setDuration(700);
-
-            ScaleAnimation anim3 = new ScaleAnimation(0f, 1.0f, 0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            anim3.setDuration(700);
-
-            AnimationSet animSet = new AnimationSet(true);
-            animSet.addAnimation(anim3);
-            animSet.addAnimation(anim2);
-
-            view.startAnimation(animSet);
-
         }
 
         @Override

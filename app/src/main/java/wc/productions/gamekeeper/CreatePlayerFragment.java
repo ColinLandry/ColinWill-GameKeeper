@@ -3,6 +3,7 @@ package wc.productions.gamekeeper;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -16,27 +17,29 @@ import android.widget.EditText;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CreateTeamFragment.OnFragmentInteractionListener} interface
+ * {@link CreatePlayerFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CreateTeamFragment#newInstance} factory method to
+ * Use the {@link CreatePlayerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateTeamFragment extends Fragment {
+public class CreatePlayerFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    EditText coachNameInput;
-    EditText teamNameInput;
+    EditText playerNameInput;
+    EditText playerPhoneInput;
+    EditText playerEmailInput;
+
+    private Team team;
 
     private OnFragmentInteractionListener mListener;
 
-    public CreateTeamFragment() {
+    public CreatePlayerFragment() {
         // Required empty public constructor
     }
 
@@ -44,16 +47,14 @@ public class CreateTeamFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateTeamFragment.
+     * @param param1 team you are passing.
+     * @return A new instance of fragment CreatePlayerFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateTeamFragment newInstance(String param1, String param2) {
-        CreateTeamFragment fragment = new CreateTeamFragment();
+    public static CreatePlayerFragment newInstance(Parcelable param1) {
+        CreatePlayerFragment fragment = new CreatePlayerFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,8 +63,7 @@ public class CreateTeamFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            team = getArguments().getParcelable(ARG_PARAM1);
         }
     }
 
@@ -73,23 +73,28 @@ public class CreateTeamFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_create_team, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_create_player, container, false);
         MainActivity.fab.hide();
-        coachNameInput = (EditText) view.findViewById(R.id.teamCoachInput);
-        teamNameInput = (EditText) view.findViewById(R.id.teamNameInput);
-        Button submit = (Button) view.findViewById(R.id.submitTeam);
+        playerNameInput = (EditText) view.findViewById(R.id.playerNameInput);
+        playerPhoneInput = (EditText) view.findViewById(R.id.playerPhoneInput);
+        playerEmailInput = (EditText) view.findViewById(R.id.playerEmailInput);
+        Button submit = (Button) view.findViewById(R.id.submitPlayer);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Create the team
-                Team team = new Team(teamNameInput.getText().toString(), coachNameInput.getText().toString());
+                Player player = new Player(playerNameInput.getText().toString(),
+                        Integer.parseInt(playerPhoneInput.getText().toString()),
+                        playerEmailInput.getText().toString()
+                );
 
                 //Grab an instance of the database
                 DatabaseHandler db = new DatabaseHandler(getContext());
 
-                //Add the team to the database
-                db.addTeam(team);
+                //Add the player to the database
+                db.addPlayer(player, team);
 
                 //Close the database
                 db.close();
@@ -102,8 +107,7 @@ public class CreateTeamFragment extends Fragment {
             }
         });
 
-        return view;
-    }
+        return view;    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
