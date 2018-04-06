@@ -1,9 +1,11 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,11 +74,25 @@ public class SettingsFragment extends Fragment {
         deleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseHandler db = new DatabaseHandler(getContext());
-                db.deleteAllTeams();
-                db.deleteAllGames();
-                db.deleteAllPlayers();
-                db.close();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure you want to clear all data?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //Grab an instance of the database
+                                DatabaseHandler db = new DatabaseHandler(getContext());
+                                //Remove the team from the database
+                                db.deleteAllTeams();
+                                db.deleteAllGames();
+                                db.deleteAllPlayers();
+                                db.close();
+
+                            }
+                        })
+                        .setNegativeButton("No", null);
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
 
