@@ -4,9 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -32,6 +37,13 @@ public class CreateGameFragment extends Fragment {
 
     Spinner spinTeamOne;
     Spinner spinTeamTwo;
+    Button createGame;
+    EditText name;
+    EditText date;
+    Team teamOne;
+    Team teamTwo;
+    FragmentManager fm;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -74,8 +86,57 @@ public class CreateGameFragment extends Fragment {
         // Inflate the layout for this fragment
         spinTeamOne = view.findViewById(R.id.firstTeamSpinner);
         spinTeamTwo = view.findViewById(R.id.secondTeamSpinner);
+        name = view.findViewById(R.id.gameName);
+        date = view.findViewById(R.id.gameDate);
         DatabaseHandler db = new DatabaseHandler(getContext());
-        ArrayList<Team> list = db.getAllTeams();
+        final ArrayList<Team> list = db.getAllTeams();
+        //Link the ArrayList with the spinner
+        ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, list);
+        spinTeamOne.setAdapter(adapter);
+        spinTeamTwo.setAdapter(adapter);
+
+        spinTeamOne.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                teamOne = list.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        spinTeamTwo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                teamTwo = list.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        createGame = view.findViewById(R.id.submitGameButton);
+
+        createGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Grab an instance of the database
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                //Add the location to the database
+                db.addGame( name.getText().toString(),
+                        date.getText().toString(),
+                        teamOne,teamTwo);
+                //Close the database
+                db.close();
+                //Grab the fragment manager and move us back a page/fragment
+                fm = getActivity().getSupportFragmentManager();
+                fm.popBackStack();
+            }
+        });
 
         return view;
     }

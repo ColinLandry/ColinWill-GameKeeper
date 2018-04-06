@@ -53,6 +53,7 @@ public class viewPagerItemFragment extends Fragment {
         args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
+
     }
 
     @Override

@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +33,8 @@ public class upcomingGamesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    Team team;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -117,20 +121,38 @@ public class upcomingGamesFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             //Requires param1 String and param2 int
+            DatabaseHandler db = new DatabaseHandler(getContext());
+
+            final ArrayList<Team> test = db.getAllTeams();
+            db.addGame("test","test",test.get(0),test.get(1));
+            db.addGame("test","test",test.get(0),test.get(1));
+            db.addGame("test","test",test.get(0),test.get(1));
+            db.addGame("test","test",test.get(0),test.get(1));
+            db.addGame("test","test",test.get(0),test.get(1));
+            db.addGame("test","test",test.get(0),test.get(1));
+            db.addGame("test","test",test.get(0),test.get(1));
+            final ArrayList<Game> list = db.getAllGames();
+
             switch (position){
                 case 0:
-                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+                    team = db.getTeam(list.get(position).getTeam1());
+                    return viewPagerItemFragment.newInstance (team.getName().toString(),team.getName().toString(),list.get(position).getDate());
                 case 1:
+                    team = db.getTeam(list.get(position).getTeam1());
                     return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
                 case 2:
+                    team = db.getTeam(list.get(position).getTeam1());
                     return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
                 case 3:
+                    team = db.getTeam(list.get(position).getTeam1());
                     return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
                 case 4:
+                    team = db.getTeam(list.get(position).getTeam1());
                     return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
                 default:
                     return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
             }
+
         }
 
         @Override
