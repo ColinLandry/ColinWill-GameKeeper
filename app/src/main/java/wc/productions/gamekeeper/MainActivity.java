@@ -19,7 +19,9 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, upcomingGamesFragment.OnFragmentInteractionListener,
         viewPagerItemFragment.OnFragmentInteractionListener,
-        CreateGameFragment.OnFragmentInteractionListener{
+        CreateGameFragment.OnFragmentInteractionListener,
+        TeamManagementFragment.OnFragmentInteractionListener,
+        TeamDetailsFragment.OnFragmentInteractionListener {
 
 
     FragmentManager fm;
@@ -31,8 +33,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        fm = getSupportFragmentManager();
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -93,15 +99,23 @@ public class MainActivity extends AppCompatActivity
         fm = getSupportFragmentManager();
         int id = item.getItemId();
 
+        //Create fragment transaction
+        android.support.v4.app.FragmentTransaction tr = fm.beginTransaction();
+
         if (id == R.id.nav_home) {
-
+            // Handle the home action
+//            tr.replace(R.id.content, new MainFragment());
+//            tr.addToBackStack(null);
+//            tr.commit();
         } else if (id == R.id.nav_games) {
-            FragmentTransaction transaction = fm.beginTransaction();
-            transaction.replace(R.id.main_content, new upcomingGamesFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
+           tr.replace(R.id.main_content, new upcomingGamesFragment());
+            tr.addToBackStack(null);
+            tr.commit();
         } else if (id == R.id.nav_management) {
-
+            // Handle the home action
+            tr.replace(R.id.main_content, new TeamManagementFragment());
+            tr.addToBackStack(null);
+            tr.commit();
         } else if (id == R.id.nav_info) {
 
         }
