@@ -83,7 +83,7 @@ public class TeamDetailsFragment extends Fragment {
         //Set values of title and coach name
         if(team != null){
             teamName.setText(team.getName());
-            coachName.setText(team.getCoach());
+            coachName.setText("Coached by: " + team.getCoach());
         }
 
         RecyclerView list = view.findViewById(R.id.playersRecyclerList);
@@ -140,7 +140,7 @@ public class TeamDetailsFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.player_item_view, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.player_item_view, parent, false);
             final CustomViewHolder viewHolder = new CustomViewHolder(view);
 
             view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -182,6 +182,8 @@ public class TeamDetailsFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Player player = players.get(position);
             ((CustomViewHolder) holder).playerName.setText(player.getName());
+            ((CustomViewHolder) holder).playerPhone.setText(player.getPhone() + "");
+            ((CustomViewHolder) holder).playerEmail.setText(player.getEmail());
         }
 
         @Override
@@ -191,6 +193,8 @@ public class TeamDetailsFragment extends Fragment {
 
         class CustomViewHolder extends RecyclerView.ViewHolder{
             protected TextView playerName;
+            protected TextView playerPhone;
+            protected TextView playerEmail;
 
             /**
              * Set the holder items to the corresponding view locations
@@ -199,6 +203,8 @@ public class TeamDetailsFragment extends Fragment {
             public CustomViewHolder(View view){
                 super(view);
                 this.playerName = view.findViewById(R.id.playerName);
+                this.playerPhone = view.findViewById(R.id.playerPhone);
+                this.playerEmail = view.findViewById(R.id.playerEmail);
             }
         }
     }
