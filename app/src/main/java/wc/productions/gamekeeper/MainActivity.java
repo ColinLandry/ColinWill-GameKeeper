@@ -1,11 +1,11 @@
 package wc.productions.gamekeeper;
 
-import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,9 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+        implements NavigationView.OnNavigationItemSelectedListener, upcomingGamesFragment.OnFragmentInteractionListener,
+        viewPagerItemFragment.OnFragmentInteractionListener,
+        CreateGameFragment.OnFragmentInteractionListener,
         TeamManagementFragment.OnFragmentInteractionListener,
-        TeamDetailsFragment.OnFragmentInteractionListener {
+        TeamDetailsFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener{
+
 
     FragmentManager fm;
     public static FloatingActionButton fab;
@@ -43,6 +47,9 @@ public class MainActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -76,11 +83,15 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        fm = getSupportFragmentManager();
         int id = item.getItemId();
+        android.support.v4.app.FragmentTransaction tr = fm.beginTransaction();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            tr.replace(R.id.main_content, new SettingsFragment());
+            tr.addToBackStack(null);
+            tr.commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -90,6 +101,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        fm = getSupportFragmentManager();
         int id = item.getItemId();
 
         //Create fragment transaction
@@ -101,10 +113,12 @@ public class MainActivity extends AppCompatActivity
 //            tr.addToBackStack(null);
 //            tr.commit();
         } else if (id == R.id.nav_games) {
-
+           tr.replace(R.id.main_content, new upcomingGamesFragment());
+            tr.addToBackStack(null);
+            tr.commit();
         } else if (id == R.id.nav_management) {
             // Handle the home action
-            tr.replace(R.id.content, new TeamManagementFragment());
+            tr.replace(R.id.main_content, new TeamManagementFragment());
             tr.addToBackStack(null);
             tr.commit();
         } else if (id == R.id.nav_info) {
