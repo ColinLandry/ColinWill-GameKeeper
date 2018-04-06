@@ -110,13 +110,17 @@ public class TeamManagementFragment extends Fragment {
         MainActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseHandler db = new DatabaseHandler(getContext());
-                Team test = new Team("Test team", "Test coach name");
-                db.addTeam(test);
-                db.close();
-
-                teamList.add(test);
-                adapter.notifyItemInserted(adapter.getItemCount());
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.main_content, new CreateTeamFragment());
+                ft.commit();
+//                DatabaseHandler db = new DatabaseHandler(getContext());
+//                Team test = new Team("Test team", "Test coach name");
+//                db.addTeam(test);
+//                db.close();
+//
+//                teamList.add(test);
+//                adapter.notifyItemInserted(adapter.getItemCount());
 
             }
         });
