@@ -189,7 +189,7 @@ public class TeamManagementFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Team team = teams.get(position);
             ((CustomViewHolder) holder).teamName.setText(team.getName());
-            ((CustomViewHolder) holder).coachName.setText("" + team.getCoach());
+            ((CustomViewHolder) holder).coachName.setText(team.getCoach());
             setAnimation(holder.itemView);
 
         }
