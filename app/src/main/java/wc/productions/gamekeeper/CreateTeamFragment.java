@@ -4,9 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 /**
@@ -26,6 +30,9 @@ public class CreateTeamFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    EditText coachNameInput;
+    EditText teamNameInput;
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,11 +67,41 @@ public class CreateTeamFragment extends Fragment {
         }
     }
 
+    FragmentManager fm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_team, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_team, container, false);
+        MainActivity.fab.hide();
+        coachNameInput = (EditText) view.findViewById(R.id.teamCoachInput);
+        teamNameInput = (EditText) view.findViewById(R.id.teamNameInput);
+        Button submit = (Button) view.findViewById(R.id.submitTeam);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create the team
+                Team team = new Team(teamNameInput.getText().toString(), coachNameInput.getText().toString());
+
+                //Grab an instance of the database
+                DatabaseHandler db = new DatabaseHandler(getContext());
+
+                //Add the location to the database
+                db.addTeam(team);
+                //Close the database
+                db.close();
+
+                hideKeyboard();
+
+                //Grab the fragment manager and move us back a page/fragment
+                fm = getActivity().getSupportFragmentManager();
+                fm.popBackStack();
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,5 +141,14 @@ public class CreateTeamFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void hideKeyboard() {
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }

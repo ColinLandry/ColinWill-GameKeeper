@@ -17,12 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, upcomingGamesFragment.OnFragmentInteractionListener,
+        implements NavigationView.OnNavigationItemSelectedListener,
+        upcomingGamesFragment.OnFragmentInteractionListener,
         viewPagerItemFragment.OnFragmentInteractionListener,
         CreateGameFragment.OnFragmentInteractionListener,
         TeamManagementFragment.OnFragmentInteractionListener,
         TeamDetailsFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener{
+        SettingsFragment.OnFragmentInteractionListener,
+        CreateTeamFragment.OnFragmentInteractionListener{
 
 
     FragmentManager fm;
