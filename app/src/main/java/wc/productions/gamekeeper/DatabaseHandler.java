@@ -165,7 +165,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Create player
      */
 
-    public void addPlayer(Player player, Team team){
+    public int addPlayer(Player player, Team team){
         SQLiteDatabase db = this.getWritableDatabase();
 
         //Insert into player table
@@ -175,12 +175,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_PLAYEREMAIL, player.getEmail());
         db.insert(TABLE_PLAYERS, null, values);
 
-        //Insert into playerteams table
-        ContentValues v = new ContentValues();
-        v.put(COLUMN_TEAMID, team.getId());
-        v.put(COLUMN_PLAYERID, player.getId());
-        db.insert(TABLE_PLAYERTEAM, null, v);
-        db.close();
+        Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
+        if(cursor.moveToFirst()) {
+            int id = Integer.parseInt(cursor.getString(0));
+            System.out.println("Record ID " + id);
+
+            //Insert into playerteams table
+            ContentValues v = new ContentValues();
+            v.put(COLUMN_TEAMID, team.getId());
+            v.put(COLUMN_PLAYERID, id);
+            db.insert(TABLE_PLAYERTEAM, null, v);
+            db.close();
+
+            return id;
+        }
+        return -1;
     }
 
     /**
@@ -206,6 +215,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_TEAMNAME, team.getName());
         values.put(COLUMN_TEAMCOACH, team.getCoach());
         db.insert(TABLE_TEAMS, null, values);
+
+        Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
+        if(cursor.moveToFirst()) {
+            int id = Integer.parseInt(cursor.getString(0));
+            System.out.println("Record ID " + id);
+            team.setId(id);
+        }
         db.close();
     }
 
@@ -311,33 +327,56 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * and the id is of the team you input
      * @param team team that you want to retrieve all players for
      */
-    //Retrieve all players for a team
-    public ArrayList<Player> getAllTeamPlayers(Team team){
-        SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<Player> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + TABLE_PLAYERS + " AS p "
-                + " JOIN " + TABLE_PLAYERTEAM + " AS t "
-                + " ON p." + COLUMN_ID + " = t." + COLUMN_PLAYERID
-                + " WHERE t." + COLUMN_TEAMID + " = " + team.getId();
-        System.out.println("Test" + team.getId());
-        Cursor cursor = db.rawQuery(sql, null);
-        /**
-         * If cursor is not null, add to player arraylist
-         */
-        if (cursor != null && cursor.moveToFirst()){
-            do{
-                list.add((new Player(Integer.parseInt(cursor.getString(0)),
-                        cursor.getString(1),
-                        Integer.parseInt(cursor.getString(2)),
-                        cursor.getString(3))));
-            } while (cursor.moveToNext());
-        }
-        for (int i = 0; i < list.size(); i++){
-            System.out.println(list.get(i));
+//    //Retrieve all players for a team
+//    public ArrayList<Player> getAllTeamPlayers(Team team){
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        ArrayList<Player> list = new ArrayList<>();
+//        String sql = "SELECT * FROM " + TABLE_PLAYERS + " AS p "
+//                + " JOIN " + TABLE_PLAYERTEAM + " AS t "
+//                + " ON p." + COLUMN_ID + " = t." + COLUMN_PLAYERID
+//                + " WHERE t." + COLUMN_TEAMID + " = " + team.getId();
+//        System.out.println("Test" + team.getId());
+//        Cursor cursor = db.rawQuery(sql, null);
+//        /**
+//         * If cursor is not null, add to player arraylist
+//         */
+//        if (cursor != null && cursor.moveToFirst()){
+//            do{
+//                list.add((new Player(Integer.parseInt(cursor.getString(0)),
+//                        cursor.getString(1),
+//                        Integer.parseInt(cursor.getString(2)),
+//                        cursor.getString(3))));
+//            } while (cursor.moveToNext());
+//        }
+//        for (int i = 0; i < list.size(); i++){
+//            System.out.println(list.get(i));
+//
+//        }
+//        db.close();
+//        return list;
+//    }
 
+    public ArrayList<Player> getAllTeamPlayers(int team) {
+        ArrayList<Player> playerList = new ArrayList<Player>();
+        String selectQuery = "SELECT  * FROM " + TABLE_PLAYERTEAM + " WHERE " + COLUMN_TEAMID + " = " + team;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String innerQuery = "SELECT * FROM " + TABLE_PLAYERS + " WHERE " + COLUMN_ID + "=" + cursor.getInt(1);
+                Cursor innerCursor = db.rawQuery(innerQuery, null);
+                if (innerCursor.moveToFirst()) {
+                    do {
+                        Player player = new Player(Integer.parseInt(innerCursor.getString(0)),
+                                innerCursor.getString(1),
+                                Integer.parseInt(innerCursor.getString(2)),
+                                innerCursor.getString(3));
+                        playerList.add(player);
+                    } while (innerCursor.moveToNext());
+                }
+            }while (cursor.moveToNext());
         }
-        db.close();
-        return list;
+        return playerList;
     }
 
     /**
