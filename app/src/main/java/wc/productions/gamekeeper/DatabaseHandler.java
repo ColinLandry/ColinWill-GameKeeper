@@ -457,4 +457,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteAllTeams(){
+        String query = "SELECT * FROM " + TABLE_TEAMS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                deleteTeam(Integer.parseInt(cursor.getString(0)));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+    }
+
+    public void deleteAllGames(){
+        String query = "SELECT * FROM " + TABLE_GAMES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                deleteGame(Integer.parseInt(cursor.getString(0)));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+    }
+
+    public void deleteAllPlayers(){
+        String query = "SELECT * FROM " + TABLE_PLAYERS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                deletePlayer(Integer.parseInt(cursor.getString(0)));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+    }
+
 }

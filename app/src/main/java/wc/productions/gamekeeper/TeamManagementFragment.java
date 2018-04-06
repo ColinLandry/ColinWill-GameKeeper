@@ -145,7 +145,7 @@ public class TeamManagementFragment extends Fragment {
                     TeamDetailsFragment td = TeamDetailsFragment.newInstance(teams.get(position));
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.addToBackStack(null);
-                    ft.replace(R.id.content, td);
+                    ft.replace(R.id.main_content, td);
                     ft.commit();
                 }
             });
