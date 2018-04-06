@@ -1,5 +1,6 @@
 package wc.productions.gamekeeper;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,13 +9,18 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 
 /**
@@ -34,15 +40,26 @@ public class CreateGameFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    Calendar myCalendar = Calendar.getInstance();
     Spinner spinTeamOne;
     Spinner spinTeamTwo;
     Button createGame;
     EditText name;
-    EditText date;
+    EditText dateText;
     Team teamOne;
     Team teamTwo;
     FragmentManager fm;
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+    };
 
 
     private OnFragmentInteractionListener mListener;
@@ -87,7 +104,7 @@ public class CreateGameFragment extends Fragment {
         spinTeamOne = view.findViewById(R.id.firstTeamSpinner);
         spinTeamTwo = view.findViewById(R.id.secondTeamSpinner);
         name = view.findViewById(R.id.gameName);
-        date = view.findViewById(R.id.gameDate);
+        dateText = view.findViewById(R.id.gameDate);
         DatabaseHandler db = new DatabaseHandler(getContext());
         final ArrayList<Team> list = db.getAllTeams();
         //Link the ArrayList with the spinner
@@ -119,6 +136,15 @@ public class CreateGameFragment extends Fragment {
             }
         });
 
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
         createGame = view.findViewById(R.id.submitGameButton);
 
         createGame.setOnClickListener(new View.OnClickListener() {
@@ -128,12 +154,16 @@ public class CreateGameFragment extends Fragment {
                 DatabaseHandler db = new DatabaseHandler(getContext());
                 //Add the location to the database
                 db.addGame( name.getText().toString(),
-                        date.getText().toString(),
+                        dateText.getText().toString(),
                         teamOne,teamTwo);
                 //Close the database
                 db.close();
+                //Hide keyboard
+                hideKeyboard();
                 //Grab the fragment manager and move us back a page/fragment
                 fm = getActivity().getSupportFragmentManager();
+
+
                 fm.popBackStack();
             }
         });
@@ -178,5 +208,21 @@ public class CreateGameFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        dateText.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    public void hideKeyboard() {
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }

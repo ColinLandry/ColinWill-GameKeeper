@@ -124,35 +124,39 @@ public class upcomingGamesFragment extends Fragment {
             DatabaseHandler db = new DatabaseHandler(getContext());
 
             final ArrayList<Team> test = db.getAllTeams();
-            db.addGame("test","test",test.get(0),test.get(1));
-            db.addGame("test","test",test.get(0),test.get(1));
-            db.addGame("test","test",test.get(0),test.get(1));
-            db.addGame("test","test",test.get(0),test.get(1));
-            db.addGame("test","test",test.get(0),test.get(1));
-            db.addGame("test","test",test.get(0),test.get(1));
-            db.addGame("test","test",test.get(0),test.get(1));
+//            db.addGame("test","test",test.get(0),test.get(1));
+//            db.addGame("test","test",test.get(0),test.get(1));
+//            db.addGame("test","test",test.get(0),test.get(1));
+//            db.addGame("test","test",test.get(0),test.get(1));
+//            db.addGame("test","test",test.get(0),test.get(1));
+//            db.addGame("test","test",test.get(0),test.get(1));
+//            db.addGame("test","test",test.get(0),test.get(1));
             final ArrayList<Game> list = db.getAllGames();
+            //Collections.sort(arraylist);
+            if (list.size() < 5 || test.isEmpty()){
 
-            switch (position){
-                case 0:
-                    team = db.getTeam(list.get(position).getTeam1());
-                    return viewPagerItemFragment.newInstance (team.getName().toString(),team.getName().toString(),list.get(position).getDate());
-                case 1:
-                    team = db.getTeam(list.get(position).getTeam1());
-                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
-                case 2:
-                    team = db.getTeam(list.get(position).getTeam1());
-                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
-                case 3:
-                    team = db.getTeam(list.get(position).getTeam1());
-                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
-                case 4:
-                    team = db.getTeam(list.get(position).getTeam1());
-                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
-                default:
-                    return viewPagerItemFragment.newInstance("Windsor Wolves","Windsor Sharks","02-19-2019");
+                return viewPagerItemFragment.newInstance("Please Add a team","and make 5 games","02-19-2019");
+            }else {
+                switch (position) {
+                    case 0:
+                        team = db.getTeam(list.get(position).getTeam1());
+                        return viewPagerItemFragment.newInstance(team.getName(), team.getName(), list.get(position).getDate());
+                    case 1:
+                        team = db.getTeam(list.get(position).getTeam1());
+                        return viewPagerItemFragment.newInstance("Windsor Wolves", "Windsor Sharks", "02-19-2019");
+                    case 2:
+                        team = db.getTeam(list.get(position).getTeam1());
+                        return viewPagerItemFragment.newInstance("Windsor Wolves", "Windsor Sharks", "02-19-2019");
+                    case 3:
+                        team = db.getTeam(list.get(position).getTeam1());
+                        return viewPagerItemFragment.newInstance("Windsor Wolves", "Windsor Sharks", "02-19-2019");
+                    case 4:
+                        team = db.getTeam(list.get(position).getTeam1());
+                        return viewPagerItemFragment.newInstance("Windsor Wolves", "Windsor Sharks", "02-19-2019");
+                    default:
+                        return viewPagerItemFragment.newInstance("Windsor Wolves", "Windsor Sharks", "02-19-2019");
+                }
             }
-
         }
 
         @Override
