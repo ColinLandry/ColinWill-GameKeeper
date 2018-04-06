@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity
         viewPagerItemFragment.OnFragmentInteractionListener,
         CreateGameFragment.OnFragmentInteractionListener,
         TeamManagementFragment.OnFragmentInteractionListener,
-        TeamDetailsFragment.OnFragmentInteractionListener {
+        TeamDetailsFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener{
 
 
     FragmentManager fm;
@@ -82,11 +83,15 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        fm = getSupportFragmentManager();
         int id = item.getItemId();
+        android.support.v4.app.FragmentTransaction tr = fm.beginTransaction();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            tr.replace(R.id.main_content, new SettingsFragment());
+            tr.addToBackStack(null);
+            tr.commit();
         }
 
         return super.onOptionsItemSelected(item);
