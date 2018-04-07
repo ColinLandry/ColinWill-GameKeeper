@@ -110,21 +110,9 @@ public class TeamDetailsFragment extends Fragment {
          * Button to create a team, for now only test values input
          */
         fm = getActivity().getSupportFragmentManager();
-        MainActivity.fab.setImageResource(R.drawable.ic_add_black_24dp);
-        MainActivity.fab.show();
-        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CreatePlayerFragment td = CreatePlayerFragment.newInstance(team);
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.addToBackStack(null);
-                ft.replace(R.id.main_content, td);
-                ft.commit();
+        MainActivity.fab.hide();
 
-                adapter.notifyItemInserted(adapter.getItemCount());
 
-            }
-        });
 
         return view;
     }
