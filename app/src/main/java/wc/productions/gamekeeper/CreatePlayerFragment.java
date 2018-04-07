@@ -90,8 +90,14 @@ public class CreatePlayerFragment extends Fragment {
                     //if numberInput is correct size
                     if(playerPhoneInput.getText().toString().length() == 10){
 
-                        //Set number to the value in the editText
-                        int number = Integer.parseInt(playerPhoneInput.getText().toString());
+                        try{
+                            //Set number to the value in the editText
+                            int number = Integer.parseInt(playerPhoneInput.getText().toString());
+                        }catch(NumberFormatException e){
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "There was an error setting phone number", Toast.LENGTH_SHORT).show();
+                        }
+
 
                         //Create the player
                         Player player = new Player(playerNameInput.getText().toString(),
