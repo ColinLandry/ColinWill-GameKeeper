@@ -6,9 +6,11 @@
     android:layout_margin="2dp"
 
     cardView:cardBackgroundColor="@color/colorPrimary"
-    cardView:cardCornerRadius="15dp"
+    cardView:cardCornerRadius="7dp"
+    cardView:cardElevation="4dp"
+    cardView:cardPreventCornerOverlap="true"
     cardView:cardUseCompatPadding="true"
-    cardView:contentPadding="16dp">
+    cardView:contentPadding="10dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

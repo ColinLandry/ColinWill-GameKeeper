@@ -18,6 +18,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -112,7 +114,21 @@ public class TeamDetailsFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
         MainActivity.fab.hide();
 
+        ImageView addPlayerButton = view.findViewById(R.id.addPlayerButton);
 
+        addPlayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                CreatePlayerFragment td = CreatePlayerFragment.newInstance(team);
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.main_content, td);
+                ft.commit();
+
+                adapter.notifyItemInserted(adapter.getItemCount());
+            }
+        });
 
         return view;
     }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
@@ -82,23 +83,31 @@ public class CreateTeamFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Create the team
-                Team team = new Team(teamNameInput.getText().toString(), coachNameInput.getText().toString());
+                //Check if all values filled
+                if (teamNameInput.getText().length() != 0 && coachNameInput.getText().length() != 0){
+                    //Create the team
+                    Team team = new Team(teamNameInput.getText().toString(), coachNameInput.getText().toString());
 
-                //Grab an instance of the database
-                DatabaseHandler db = new DatabaseHandler(getContext());
+                    //Grab an instance of the database
+                    DatabaseHandler db = new DatabaseHandler(getContext());
 
-                //Add the team to the database
-                db.addTeam(team);
+                    //Add the team to the database
+                    db.addTeam(team);
 
-                //Close the database
-                db.close();
+                    //Close the database
+                    db.close();
 
-                hideKeyboard();
+                    hideKeyboard();
 
-                //Grab the fragment manager and move us back a page/fragment
-                fm = getActivity().getSupportFragmentManager();
-                fm.popBackStack();
+                    //Grab the fragment manager and move us back a page/fragment
+                    fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+
+                    //If not make toast popup
+                }else{
+                    Toast.makeText(getContext(), "Please make sure to fill out all fields", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

@@ -82,11 +82,9 @@ public class SettingsFragment extends Fragment {
                                 //Grab an instance of the database
                                 DatabaseHandler db = new DatabaseHandler(getContext());
                                 //Remove the team from the database
-                                db.deleteAllTeams();
-                                db.deleteAllGames();
-                                db.deleteAllPlayers();
-                                db.close();
+                                db.resetTables();
 
+                                db.close();
                             }
                         })
                         .setNegativeButton("No", null);
