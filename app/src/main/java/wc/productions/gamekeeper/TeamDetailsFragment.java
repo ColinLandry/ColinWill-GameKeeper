@@ -206,6 +206,7 @@ public class TeamDetailsFragment extends Fragment {
                 this.playerPhone = view.findViewById(R.id.playerPhone);
                 this.playerEmail = view.findViewById(R.id.playerEmail);
             }
+
         }
     }
 
