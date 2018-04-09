@@ -83,6 +83,12 @@ public class CreatePlayerFragment extends Fragment {
         playerEmailInput = (EditText) view.findViewById(R.id.playerEmailInput);
         Button submit = (Button) view.findViewById(R.id.submitPlayer);
 
+        /**
+         * In order to create a new player, all edittext values must be checked for format
+         * First we check that all fields are not empty, if so, check if the number string has
+         * no alphabetical characters. Lastly, we check if the email is valid using the function.
+         * Once all checks are complete, add the player to db and return to last fragment.
+         */
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,30 +97,33 @@ public class CreatePlayerFragment extends Fragment {
                     //if numberInput is correct size and is all numbers
                     if(playerPhoneInput.getText().toString().length() == 10 &&
                             playerPhoneInput.getText().toString().matches("[0-9]+")){
+                        //If email is valid syntax
+                        if(isEmailValid(playerEmailInput.getText().toString())){
+                            //Create the player
+                            Player player = new Player(playerNameInput.getText().toString(),
+                                    playerPhoneInput.getText().toString(),
+                                    playerEmailInput.getText().toString()
+                            );
 
-                        //Create the player
-                        Player player = new Player(playerNameInput.getText().toString(),
-                                playerPhoneInput.getText().toString(),
-                                playerEmailInput.getText().toString()
-                        );
+                            //Grab an instance of the database
+                            DatabaseHandler db = new DatabaseHandler(getContext());
 
-                        //Grab an instance of the database
-                        DatabaseHandler db = new DatabaseHandler(getContext());
+                            //Add the player to the database
+                            db.addPlayer(player, team);
 
-                        //Add the player to the database
-                        db.addPlayer(player, team);
+                            //Close the database
+                            db.close();
 
-                        //Close the database
-                        db.close();
+                            hideKeyboard();
 
-                        hideKeyboard();
-
-                        //Grab the fragment manager and move us back a page/fragment
-                        fm = getActivity().getSupportFragmentManager();
-                        fm.popBackStack();
-
+                            //Grab the fragment manager and move us back a page/fragment
+                            fm = getActivity().getSupportFragmentManager();
+                            fm.popBackStack();
+                        }else{
+                            Toast.makeText(getContext(), "Email input error, please use correct email format", Toast.LENGTH_SHORT).show();
+                        }
                         //If the number is too long, display toast
-                    }else if(playerPhoneInput.getText().toString().length() > 10){
+                    }else{
                         Toast.makeText(getContext(), "Number input error, use format (##########)", Toast.LENGTH_SHORT).show();
                     }
                     //Toast popup
@@ -173,5 +182,9 @@ public class CreatePlayerFragment extends Fragment {
             InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }
