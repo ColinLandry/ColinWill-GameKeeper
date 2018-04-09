@@ -93,32 +93,32 @@ public class CreatePlayerFragment extends Fragment {
                         try{
                             //Set number to the value in the editText
                             int number = Integer.parseInt(playerPhoneInput.getText().toString());
+
+                            //Create the player
+                            Player player = new Player(playerNameInput.getText().toString(),
+                                    number,
+                                    playerEmailInput.getText().toString()
+                            );
+
+                            //Grab an instance of the database
+                            DatabaseHandler db = new DatabaseHandler(getContext());
+
+                            //Add the player to the database
+                            db.addPlayer(player, team);
+
+                            //Close the database
+                            db.close();
+
+                            hideKeyboard();
+
+                            //Grab the fragment manager and move us back a page/fragment
+                            fm = getActivity().getSupportFragmentManager();
+                            fm.popBackStack();
+
                         }catch(NumberFormatException e){
                             e.printStackTrace();
                             Toast.makeText(getContext(), "There was an error setting phone number", Toast.LENGTH_SHORT).show();
                         }
-
-
-                        //Create the player
-                        Player player = new Player(playerNameInput.getText().toString(),
-                                Integer.parseInt(playerPhoneInput.getText().toString()),
-                                playerEmailInput.getText().toString()
-                        );
-
-                        //Grab an instance of the database
-                        DatabaseHandler db = new DatabaseHandler(getContext());
-
-                        //Add the player to the database
-                        db.addPlayer(player, team);
-
-                        //Close the database
-                        db.close();
-
-                        hideKeyboard();
-
-                        //Grab the fragment manager and move us back a page/fragment
-                        fm = getActivity().getSupportFragmentManager();
-                        fm.popBackStack();
 
                         //If the number is too long, display toast
                     }else if(playerPhoneInput.getText().toString().length() > 10){
