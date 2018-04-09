@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,46 +88,34 @@ public class CreatePlayerFragment extends Fragment {
             public void onClick(View v) {
                 if(playerNameInput.getText().length() != 0 && playerPhoneInput.getText().length() != 0
                         && playerEmailInput.getText().length() != 0){
-                    //if numberInput is correct size
-                    if(playerPhoneInput.getText().toString().length() == 10){
+                    //if numberInput is correct size and is all numbers
+                    if(playerPhoneInput.getText().toString().length() == 10 &&
+                            playerPhoneInput.getText().toString().matches("[0-9]+")){
 
-                        try{
-                            //Set number to the value in the editText
-                            int number = Integer.parseInt(playerPhoneInput.getText().toString());
+                        //Create the player
+                        Player player = new Player(playerNameInput.getText().toString(),
+                                playerPhoneInput.getText().toString(),
+                                playerEmailInput.getText().toString()
+                        );
 
-                            //Create the player
-                            Player player = new Player(playerNameInput.getText().toString(),
-                                    number,
-                                    playerEmailInput.getText().toString()
-                            );
+                        //Grab an instance of the database
+                        DatabaseHandler db = new DatabaseHandler(getContext());
 
-                            //Grab an instance of the database
-                            DatabaseHandler db = new DatabaseHandler(getContext());
+                        //Add the player to the database
+                        db.addPlayer(player, team);
 
-                            //Add the player to the database
-                            db.addPlayer(player, team);
+                        //Close the database
+                        db.close();
 
-                            //Close the database
-                            db.close();
+                        hideKeyboard();
 
-                            hideKeyboard();
-
-                            //Grab the fragment manager and move us back a page/fragment
-                            fm = getActivity().getSupportFragmentManager();
-                            fm.popBackStack();
-
-                        }catch(NumberFormatException e){
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), "There was an error setting phone number", Toast.LENGTH_SHORT).show();
-                        }
+                        //Grab the fragment manager and move us back a page/fragment
+                        fm = getActivity().getSupportFragmentManager();
+                        fm.popBackStack();
 
                         //If the number is too long, display toast
                     }else if(playerPhoneInput.getText().toString().length() > 10){
-                        Toast.makeText(getContext(), "The number you input was too long, use format (##########)", Toast.LENGTH_SHORT).show();
-
-                        //If the number is too short, display toast
-                    }else if(playerPhoneInput.getText().toString().length() < 10){
-                        Toast.makeText(getContext(), "The number you input was too short, use format (##########)", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Number input error, use format (##########)", Toast.LENGTH_SHORT).show();
                     }
                     //Toast popup
                 }else{

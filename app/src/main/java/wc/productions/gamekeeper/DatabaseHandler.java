@@ -82,7 +82,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String CREATE_PLAYER_TABLE = "CREATE TABLE " +
             TABLE_PLAYERS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_PLAYERNAME + " TEXT,"
-            + COLUMN_PLAYERPHONE + " INTEGER,"
+            + COLUMN_PLAYERPHONE + " TEXT,"
             + COLUMN_PLAYEREMAIL + " TEXT)";
 
     /**
@@ -264,7 +264,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do{
                 playerList.add(new Player(Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
-                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getString(2),
                         cursor.getString(3)));
             } while (cursor.moveToNext());
         }
@@ -285,7 +285,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
             player = new Player(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1),
-                    Integer.parseInt(cursor.getString(2)),
+                    cursor.getString(2),
                     cursor.getString(3));
         }
         db.close();
@@ -305,7 +305,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     do {
                         Player player = new Player(Integer.parseInt(innerCursor.getString(0)),
                                 innerCursor.getString(1),
-                                Integer.parseInt(innerCursor.getString(2)),
+                                innerCursor.getString(2),
                                 innerCursor.getString(3));
                         playerList.add(player);
                     } while (innerCursor.moveToNext());
