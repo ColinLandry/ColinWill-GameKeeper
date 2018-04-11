@@ -458,6 +458,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(player.getId())});
     }
 
+    //Update team logo
+    public int updateLogo(Logo logo){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Update resource path in logo table
+        ContentValues v = new ContentValues();
+        v.put(COLUMN_RESOURCE, logo.getResource());
+        return db.update(TABLE_LOGOS, v, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(logo.getId())});
+    }
+
     /**
      * DELETE Operations
      */

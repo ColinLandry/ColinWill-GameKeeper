@@ -191,7 +191,7 @@ public class TeamManagementFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     int position = viewHolder.getAdapterPosition();
-                    UpdatePlayerFragment td = UpdatePlayerFragment.newInstance(teams.get(position));
+                    UpdateTeamFragment td = UpdateTeamFragment.newInstance(teams.get(position));
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.addToBackStack(null);
                     ft.replace(R.id.main_content, td);
