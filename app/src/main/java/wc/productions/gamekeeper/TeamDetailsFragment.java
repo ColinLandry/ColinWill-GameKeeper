@@ -266,6 +266,20 @@ public class TeamDetailsFragment extends Fragment {
                 }
             });
 
+            emailPlayerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int location = viewHolder.getAdapterPosition();
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("mailto:" + players.get(location).getEmail()));  //Email App Only
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Hello " + players.get(location).getName() + ",");
+                    if (intent.resolveActivity(getActivity().getPackageManager())!= null){
+                        startActivity(intent);
+                    }
+                }
+            });
+
             return viewHolder;
         }
 
