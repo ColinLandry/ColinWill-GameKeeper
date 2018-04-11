@@ -1,8 +1,14 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -11,13 +17,19 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CreateTeamFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link CreateTeamFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,6 +39,7 @@ public class CreateTeamFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int IMAGE_INTENT_LABEL = 1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -34,6 +47,9 @@ public class CreateTeamFragment extends Fragment {
 
     EditText coachNameInput;
     EditText teamNameInput;
+    LinearLayout imageLayout;
+
+    private int picID;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,6 +95,18 @@ public class CreateTeamFragment extends Fragment {
         coachNameInput = (EditText) view.findViewById(R.id.teamCoachInput);
         teamNameInput = (EditText) view.findViewById(R.id.teamNameInput);
         Button submit = (Button) view.findViewById(R.id.submitTeam);
+        ImageView addLogo = view.findViewById(R.id.addImageButton);
+        imageLayout = view.findViewById(R.id.imageLayout);
+
+        addLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if(i.resolveActivity(getActivity().getPackageManager())!= null) {
+                    startActivityForResult(Intent.createChooser(i, "Select Picture"), IMAGE_INTENT_LABEL);
+                }
+            }
+        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +121,9 @@ public class CreateTeamFragment extends Fragment {
 
                     //Add the team to the database
                     db.addTeam(team);
+
+                    //Connect image logo to team
+                    db.addTeamLogo(picID, team.getId());
 
                     //Close the database
                     db.close();
@@ -114,6 +145,37 @@ public class CreateTeamFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IMAGE_INTENT_LABEL && resultCode == RESULT_OK){
+            if (data != null){
+                Uri selectedImage = data.getData();
+                Bitmap image = BitmapFactory.decodeFile(getPath(selectedImage));
+
+                //Create imageview and show on page
+                ImageView imageView = new ImageView(getContext());
+                imageView.setImageBitmap(image);
+                imageLayout.addView(imageView);
+
+                //Add to db
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                picID = db.addLogo(new Logo(getPath(selectedImage)));
+                if (picID != -1) {
+                    Toast.makeText(getContext(),
+                            "Photo Added Successfully",
+                            Toast.LENGTH_SHORT).show();
+                }
+                db.close();
+            }
+
+        }
+        else{
+            Toast.makeText(getContext(),
+                    "Photo Not Added",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -160,5 +222,13 @@ public class CreateTeamFragment extends Fragment {
             InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    public String getPath(Uri uri) {
+        String[] path = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContext().getContentResolver().query(uri, path, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 }

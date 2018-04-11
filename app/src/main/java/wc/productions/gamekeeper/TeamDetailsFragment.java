@@ -2,6 +2,8 @@ package wc.productions.gamekeeper;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,15 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,11 +82,18 @@ public class TeamDetailsFragment extends Fragment {
 
         TextView teamName = view.findViewById(R.id.detailsTeamName);
         TextView coachName = view.findViewById(R.id.detailsCoachName);
+        ImageView teamLogo = view.findViewById(R.id.teamDetailsLogo);
 
         //Set values of title and coach name
         if(team != null){
             teamName.setText(team.getName());
             coachName.setText("Coached by: " + team.getCoach());
+
+            //Set image
+            DatabaseHandler db = new DatabaseHandler(getContext());
+            Logo tLogo = db.getLogo(team.getId());
+            Bitmap image =  BitmapFactory.decodeFile(tLogo.getResource());
+            teamLogo.setImageBitmap(image);
         }
 
         RecyclerView list = view.findViewById(R.id.playersRecyclerList);
