@@ -22,6 +22,9 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -196,10 +199,13 @@ public class TeamManagementFragment extends Fragment {
             //Set image
             DatabaseHandler db = new DatabaseHandler(context);
             Logo tLogo = db.getLogo(team.getId());
-            Bitmap image =  BitmapFactory.decodeFile(tLogo.getResource());
-            ((CustomViewHolder) holder).teamLogo.setImageBitmap(image);
             setAnimation(holder.itemView);
 
+            System.out.println(tLogo.getResource());
+
+            Picasso.with(context).load(new File(tLogo.getResource()))
+                    .placeholder(R.drawable.placeholder)
+                    .into(((CustomViewHolder) holder).teamLogo);
         }
 
         /**
