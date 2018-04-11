@@ -8,16 +8,16 @@ public class Player {
 
     private int id;
     private String name;
-    private int phone;
+    private String phone;
     private String email;
 
-    public Player(String name, int phone, String email){
+    public Player(String name, String phone, String email){
         this.name = name;
         this.phone = phone;
         this.email = email;
     }
 
-    public Player(int id, String name, int phone, String email){
+    public Player(int id, String name, String phone, String email){
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -40,11 +40,11 @@ public class Player {
         this.name = name;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

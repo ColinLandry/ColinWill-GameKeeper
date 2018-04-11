@@ -41,13 +41,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "id";
 
     /**
-     * Coach table column names
-     */
-
-    public static final String COLUMN_COACHNAME = "name";
-    public static final String COLUMN_COACHEMAIL = "email";
-
-    /**
      * Games table column names
      */
 
@@ -89,17 +82,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String CREATE_PLAYER_TABLE = "CREATE TABLE " +
             TABLE_PLAYERS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_PLAYERNAME + " TEXT,"
-            + COLUMN_PLAYERPHONE + " INTEGER,"
+            + COLUMN_PLAYERPHONE + " TEXT,"
             + COLUMN_PLAYEREMAIL + " TEXT)";
-
-    /**
-     * Coaches table
-     */
-
-//    public static final String CREATE_COACHES_TABLE = "CREATE TABLE " +
-//            TABLE_COACHES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
-//            + COLUMN_COACHNAME + " TEXT,"
-//            + COLUMN_COACHEMAIL + " TEXT)";
 
     /**
      * Games table
@@ -148,7 +132,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COACHES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERTEAM);
     }
@@ -191,19 +174,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return -1;
     }
-
-    /**
-     * Create coach
-     */
-
-//    public void addCoach(Coach coach){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put(COLUMN_PLAYERNAME, coach.getName());
-//        values.put(COLUMN_PLAYEREMAIL, coach.getEmail());
-//        db.insert(TABLE_PLAYERS, null, values);
-//        db.close();
-//    }
 
     /**
      * Create team
@@ -294,7 +264,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do{
                 playerList.add(new Player(Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
-                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getString(2),
                         cursor.getString(3)));
             } while (cursor.moveToNext());
         }
@@ -315,46 +285,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
             player = new Player(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1),
-                    Integer.parseInt(cursor.getString(2)),
+                    cursor.getString(2),
                     cursor.getString(3));
         }
         db.close();
         return player;
     }
-
-    /**
-     * Select all from players table where the id matches in the player teams table,
-     * and the id is of the team you input
-     * @param team team that you want to retrieve all players for
-     */
-//    //Retrieve all players for a team
-//    public ArrayList<Player> getAllTeamPlayers(Team team){
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        ArrayList<Player> list = new ArrayList<>();
-//        String sql = "SELECT * FROM " + TABLE_PLAYERS + " AS p "
-//                + " JOIN " + TABLE_PLAYERTEAM + " AS t "
-//                + " ON p." + COLUMN_ID + " = t." + COLUMN_PLAYERID
-//                + " WHERE t." + COLUMN_TEAMID + " = " + team.getId();
-//        System.out.println("Test" + team.getId());
-//        Cursor cursor = db.rawQuery(sql, null);
-//        /**
-//         * If cursor is not null, add to player arraylist
-//         */
-//        if (cursor != null && cursor.moveToFirst()){
-//            do{
-//                list.add((new Player(Integer.parseInt(cursor.getString(0)),
-//                        cursor.getString(1),
-//                        Integer.parseInt(cursor.getString(2)),
-//                        cursor.getString(3))));
-//            } while (cursor.moveToNext());
-//        }
-//        for (int i = 0; i < list.size(); i++){
-//            System.out.println(list.get(i));
-//
-//        }
-//        db.close();
-//        return list;
-//    }
 
     public ArrayList<Player> getAllTeamPlayers(int team) {
         ArrayList<Player> playerList = new ArrayList<Player>();
@@ -369,7 +305,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     do {
                         Player player = new Player(Integer.parseInt(innerCursor.getString(0)),
                                 innerCursor.getString(1),
-                                Integer.parseInt(innerCursor.getString(2)),
+                                innerCursor.getString(2),
                                 innerCursor.getString(3));
                         playerList.add(player);
                     } while (innerCursor.moveToNext());
@@ -421,42 +357,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return team;
     }
 
-//    //Retrieve all coaches
-//    public ArrayList<Coach> getAllCoaches(){
-//        ArrayList<Coach> coachList = new ArrayList<Coach>();
-//        String query = "SELECT * FROM " + TABLE_COACHES;
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.rawQuery(query, null);
-//        if(cursor.moveToFirst()){
-//            do{
-//                coachList.add(new Coach(Integer.parseInt(cursor.getString(0)),
-//                        cursor.getString(1),
-//                        cursor.getString(2)));
-//            } while (cursor.moveToNext());
-//        }
-//
-//        db.close();
-//        return coachList;
-//    }
-
-//    //Retrieve one coach
-//    public Coach getCoach(int id){
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Coach coach = null;
-//        Cursor cursor = db.query(TABLE_COACHES,
-//                new String[]{COLUMN_ID, COLUMN_COACHNAME, COLUMN_COACHEMAIL},
-//                COLUMN_ID + "=?", new String[]{String.valueOf(id)},
-//                null, null, null, null);
-//        if(cursor != null){
-//            cursor.moveToFirst();
-//            coach = new Coach(Integer.parseInt(cursor.getString(0)),
-//                    cursor.getString(1),
-//                    cursor.getString(2));
-//        }
-//        db.close();
-//        return coach;
-//    }
-
     /**
      * DELETE Operations
      */
@@ -467,15 +367,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_GAMES, COLUMN_ID + " = ?",
                 new String[]{String.valueOf(game)});
-        db.close();
-    }
-
-    //Delete coach
-
-    public void deleteCoach(int coach){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_COACHES, COLUMN_ID + " = ?",
-                new String[]{String.valueOf(coach)});
         db.close();
     }
 
@@ -540,6 +431,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.close();
 
+    }
+
+    public void resetTables(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COACHES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERTEAM);
+
+        db.execSQL(CREATE_GAMES_TABLE);
+        db.execSQL(CREATE_PLAYER_TABLE);
+        db.execSQL(CREATE_TEAMS_TABLE);
+        db.execSQL(CREATE_PLAYERTEAMS_TABLE);
     }
 
 }

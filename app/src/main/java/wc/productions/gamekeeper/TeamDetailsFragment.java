@@ -18,6 +18,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -83,7 +85,7 @@ public class TeamDetailsFragment extends Fragment {
         //Set values of title and coach name
         if(team != null){
             teamName.setText(team.getName());
-            coachName.setText(team.getCoach());
+            coachName.setText("Coached by: " + team.getCoach());
         }
 
         RecyclerView list = view.findViewById(R.id.playersRecyclerList);
@@ -110,19 +112,21 @@ public class TeamDetailsFragment extends Fragment {
          * Button to create a team, for now only test values input
          */
         fm = getActivity().getSupportFragmentManager();
-        MainActivity.fab.setImageResource(R.drawable.ic_add_black_24dp);
-        MainActivity.fab.show();
-        MainActivity.fab.setOnClickListener(new View.OnClickListener() {
+        MainActivity.fab.hide();
+
+        ImageView addPlayerButton = view.findViewById(R.id.addPlayerButton);
+
+        addPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                DatabaseHandler db = new DatabaseHandler(getContext());
-                Player test = new Player("Test man", 1332221234,"cool@cool.com");
-                db.addPlayer(test, team);
-                db.close();
+            public void onClick(View view) {
 
-                playerList.add(test);
+                CreatePlayerFragment td = CreatePlayerFragment.newInstance(team);
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.main_content, td);
+                ft.commit();
+
                 adapter.notifyItemInserted(adapter.getItemCount());
-
             }
         });
 
@@ -140,7 +144,7 @@ public class TeamDetailsFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.player_item_view, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.player_item_view, parent, false);
             final CustomViewHolder viewHolder = new CustomViewHolder(view);
 
             view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -182,26 +186,8 @@ public class TeamDetailsFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Player player = players.get(position);
             ((CustomViewHolder) holder).playerName.setText(player.getName());
-            setAnimation(holder.itemView);
-        }
-
-        /**
-         * Animation on each item
-         */
-        public void setAnimation(View view) {
-
-            AlphaAnimation anim2 = new AlphaAnimation(0.0f, 1.0f);
-            anim2.setDuration(700);
-
-            ScaleAnimation anim3 = new ScaleAnimation(0f, 1.0f, 0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            anim3.setDuration(700);
-
-            AnimationSet animSet = new AnimationSet(true);
-            animSet.addAnimation(anim3);
-            animSet.addAnimation(anim2);
-
-            view.startAnimation(animSet);
-
+            ((CustomViewHolder) holder).playerPhone.setText(player.getPhone() + "");
+            ((CustomViewHolder) holder).playerEmail.setText(player.getEmail());
         }
 
         @Override
@@ -211,6 +197,8 @@ public class TeamDetailsFragment extends Fragment {
 
         class CustomViewHolder extends RecyclerView.ViewHolder{
             protected TextView playerName;
+            protected TextView playerPhone;
+            protected TextView playerEmail;
 
             /**
              * Set the holder items to the corresponding view locations
@@ -219,7 +207,10 @@ public class TeamDetailsFragment extends Fragment {
             public CustomViewHolder(View view){
                 super(view);
                 this.playerName = view.findViewById(R.id.playerName);
+                this.playerPhone = view.findViewById(R.id.playerPhone);
+                this.playerEmail = view.findViewById(R.id.playerEmail);
             }
+
         }
     }
 

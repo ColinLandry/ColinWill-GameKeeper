@@ -110,12 +110,11 @@ public class TeamManagementFragment extends Fragment {
         MainActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseHandler db = new DatabaseHandler(getContext());
-                Team test = new Team("Test team", "Test coach name");
-                db.addTeam(test);
-                db.close();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.main_content, new CreateTeamFragment());
+                ft.commit();
 
-                teamList.add(test);
                 adapter.notifyItemInserted(adapter.getItemCount());
 
             }
@@ -135,7 +134,7 @@ public class TeamManagementFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_item_view, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_item_view, parent, false);
             final CustomViewHolder viewHolder = new CustomViewHolder(view);
 
             view.setOnClickListener(new View.OnClickListener() {
