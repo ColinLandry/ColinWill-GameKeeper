@@ -33,7 +33,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TABLE_TEAMS = "teams";
     public static final String TABLE_COACHES = "coaches";
     public static final String TABLE_PLAYERTEAM = "playerteam";
-
+    public static final String TABLE_TEAMLOGO = "teamlogo";
+    public static final String TABLE_IMAGES = "images";
     /**
      * Create common column names
      */
@@ -72,6 +73,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COLUMN_TEAMID = "teamid";
 
     /**
+     * Images table column names
+     */
+
+    public static final String COLUMN_RESOURCE = "resource";
+
+    /**
+     * Imagesteams table column names
+     */
+
+    public static final String COLUMN_LOGO = "logo";
+
+    /**
      * Create statements
      */
 
@@ -104,7 +117,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             TABLE_TEAMS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_TEAMNAME + " TEXT,"
             + COLUMN_TEAMCOACH + " TEXT)";
-//            + COLUMN_TEAMCOACH + " INTEGER REFERENCES " + TABLE_COACHES + "(" + COLUMN_ID + "))";
+
+    /**
+     * Images table
+     */
+
+    public static final String CREATE_IMAGES_TABLE = "CREATE TABLE" +
+            TABLE_IMAGES + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_RESOURCE + " TEXT)";
+
+    /**
+     * Teamlogo table
+     */
+
+    public static final String CREATE_TEAMLOGO_TABLE = "CREATE TABLE" +
+            TABLE_TEAMLOGO + "(" + COLUMN_TEAMID + " INTEGER REFERENCES " +
+            TABLE_TEAMS + "(" + COLUMN_ID + ")," + COLUMN_LOGO +
+            " INTEGER REFERENCES " + TABLE_IMAGES + "(" + COLUMN_ID + "))";
 
     /**
      * Playerteams table
@@ -121,11 +150,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        db.execSQL(CREATE_COACHES_TABLE);
         db.execSQL(CREATE_GAMES_TABLE);
         db.execSQL(CREATE_PLAYER_TABLE);
         db.execSQL(CREATE_TEAMS_TABLE);
         db.execSQL(CREATE_PLAYERTEAMS_TABLE);
+        db.execSQL(CREATE_IMAGES_TABLE);
+        db.execSQL(CREATE_TEAMLOGO_TABLE);
     }
 
     @Override
@@ -134,6 +164,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERTEAM);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMLOGO);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
     }
 
     /**
@@ -440,11 +472,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COACHES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERTEAM);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMLOGO);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
 
         db.execSQL(CREATE_GAMES_TABLE);
         db.execSQL(CREATE_PLAYER_TABLE);
         db.execSQL(CREATE_TEAMS_TABLE);
         db.execSQL(CREATE_PLAYERTEAMS_TABLE);
+        db.execSQL(CREATE_IMAGES_TABLE);
+        db.execSQL(CREATE_TEAMLOGO_TABLE);
     }
 
 }
