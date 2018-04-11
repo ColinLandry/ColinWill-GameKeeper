@@ -92,4 +92,9 @@ public class Team implements Parcelable {
             return new Team[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return  name;
+    }
 }
