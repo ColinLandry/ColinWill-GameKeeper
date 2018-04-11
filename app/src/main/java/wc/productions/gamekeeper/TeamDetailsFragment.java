@@ -240,6 +240,32 @@ public class TeamDetailsFragment extends Fragment {
             ImageView textPlayerButton = view.findViewById(R.id.textPlayerButton);
             ImageView emailPlayerButton = view.findViewById(R.id.emailPlayerButton);
 
+            callPlayerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int location = viewHolder.getAdapterPosition();
+
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + players.get(location).getPhone() ));
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
+            textPlayerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int location = viewHolder.getAdapterPosition();
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("smsto:" + players.get(location).getPhone()));  // This ensures only SMS apps respond
+                    intent.putExtra("sms_body", "Hello " + players.get(location).getName() + ",");
+                    if (intent.resolveActivity(getActivity().getPackageManager())!= null){
+                        startActivity(intent);
+                    }
+                }
+            });
+
             return viewHolder;
         }
 
