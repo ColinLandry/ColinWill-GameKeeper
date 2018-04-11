@@ -2,6 +2,7 @@ package wc.productions.gamekeeper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -108,9 +109,11 @@ public class CreateTeamFragment extends Fragment {
 //                catch(IOException e){
 //                    e.printStackTrace();
 //                }
-                Intent i = new Intent();
-                i.setType("image/*");
-                i.setAction(Intent.ACTION_GET_CONTENT);
+//                Intent i = new Intent();
+//                i.setType("image/*");
+//                i.setAction(Intent.ACTION_GET_CONTENT);
+                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
 //                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(picture));
                 if(i.resolveActivity(getActivity().getPackageManager())!= null) {
                     startActivityForResult(Intent.createChooser(i, "Select Picture"), IMAGE_INTENT_LABEL);
@@ -159,21 +162,33 @@ public class CreateTeamFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == IMAGE_INTENT_LABEL && resultCode == RESULT_OK){
-            //Show the photo
-            logoLocation = data.getData().getPath();
-            Bitmap image = BitmapFactory.decodeFile(logoLocation);
-            ImageView imageView = new ImageView(getContext());
-            imageView.setImageBitmap(image);
-            imageLayout.addView(imageView);
+            if (data != null){
+                Uri selectedImage = data.getData();
+                Bitmap image = BitmapFactory.decodeFile(getPath(selectedImage));
 
-            //Add to db
-            DatabaseHandler db = new DatabaseHandler(getContext());
-            picID = db.addLogo(new Logo(logoLocation));
-            if(picID != -1){
-                Toast.makeText(getContext(),
-                        "Photo Added Successfully",
-                        Toast.LENGTH_SHORT).show();
+                System.out.println(image);
+
+                //Create imageview and show on page
+                ImageView imageView = new ImageView(getContext());
+                imageView.setImageBitmap(image);
+                imageLayout.addView(imageView);
+
+//                //Show the photo
+//                Bitmap image = BitmapFactory.decodeFile(logoLocation);
+//                ImageView imageView = new ImageView(getContext());
+//                imageView.setImageBitmap(image);
+//                imageLayout.addView(imageView);
+
+                //Add to db
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                picID = db.addLogo(new Logo(getPath(selectedImage)));
+                if (picID != -1) {
+                    Toast.makeText(getContext(),
+                            "Photo Added Successfully",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
+
         }
         else{
             Toast.makeText(getContext(),
@@ -240,5 +255,13 @@ public class CreateTeamFragment extends Fragment {
         File picture  = File.createTempFile(fileName, ".jpg", directory);
         logoLocation = picture.getAbsolutePath();
         return picture;
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 }
