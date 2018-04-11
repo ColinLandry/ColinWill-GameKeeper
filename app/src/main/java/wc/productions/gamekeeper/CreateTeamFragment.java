@@ -1,8 +1,13 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -11,7 +16,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -27,6 +39,7 @@ public class CreateTeamFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int CAMERA_INTENT_LABEL = 1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -34,6 +47,10 @@ public class CreateTeamFragment extends Fragment {
 
     EditText coachNameInput;
     EditText teamNameInput;
+    LinearLayout imageLayout;
+
+    private String logoLocation;
+    private int picID;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,6 +96,28 @@ public class CreateTeamFragment extends Fragment {
         coachNameInput = (EditText) view.findViewById(R.id.teamCoachInput);
         teamNameInput = (EditText) view.findViewById(R.id.teamNameInput);
         Button submit = (Button) view.findViewById(R.id.submitTeam);
+        Button addLogo = (Button) view.findViewById(R.id.addPlayerButton);
+        imageLayout = view.findViewById(R.id.imageLayout);
+
+        addLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File picture = null;
+                try {
+                    picture = createTempImageFile();
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+                Intent i = new Intent();
+                i.setType("image/*");
+                i.setAction(Intent.ACTION_GET_CONTENT);
+                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(picture));
+                if(i.resolveActivity(getActivity().getPackageManager())!= null) {
+                    startActivityForResult(Intent.createChooser(i, "Select Picture"), CAMERA_INTENT_LABEL);
+                }
+            }
+        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +132,9 @@ public class CreateTeamFragment extends Fragment {
 
                     //Add the team to the database
                     db.addTeam(team);
+
+                    //Connect image logo to team
+                    db.addTeamLogo(picID, team.getId());
 
                     //Close the database
                     db.close();
@@ -112,6 +154,31 @@ public class CreateTeamFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CAMERA_INTENT_LABEL && resultCode == RESULT_OK){
+            //Show the photo
+            Bitmap image = BitmapFactory.decodeFile(logoLocation);
+            ImageView imageView = new ImageView(getContext());
+            imageView.setImageBitmap(image);
+            imageLayout.addView(imageView);
+            //Add to db
+            DatabaseHandler db = new DatabaseHandler(getContext());
+            picID = db.addLogo(new Logo(logoLocation));
+            if(picID != -1){
+                Toast.makeText(getContext(),
+                        "Photo Added Successfully",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else{
+            Toast.makeText(getContext(),
+                    "Photo Not Added",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -160,5 +227,18 @@ public class CreateTeamFragment extends Fragment {
             InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    File createTempImageFile() throws IOException {
+        //Create the name of the image
+        String fileName = "hiking_app_2018_" + System.currentTimeMillis();
+        //Grab the directory we want to save the image in
+        File directory =
+                Environment.
+                        getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_PICTURES);
+        File picture  = File.createTempFile(fileName, ".jpg", directory);
+        logoLocation = picture.getAbsolutePath();
+        return picture;
     }
 }
