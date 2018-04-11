@@ -2,6 +2,7 @@ package wc.productions.gamekeeper;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -130,6 +134,59 @@ public class TeamDetailsFragment extends Fragment {
             }
         });
 
+        Button textAllButton = view.findViewById(R.id.textAllPlayersButton);
+        Button emailAllButton = view.findViewById(R.id.emailAllPlayersButton);
+
+        textAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Player> players;
+                //Call the database and use the getAll teams method with team id
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                players = db.getAllTeamPlayers(team.getId());
+                List<String> playerNumbers = new ArrayList<String>();
+                //Gather all the players phoneNumbers and store them
+                for (int i = 0; i < players.size(); i++){
+                    playerNumbers.add(players.get(i).getPhone());
+                    Log.d("tag", playerNumbers.get(i));
+
+                }
+                Intent teamTextIntent = new Intent(Intent.ACTION_VIEW);
+                teamTextIntent.setData(Uri.parse("smsto:" + playerNumbers));  // This ensures only SMS apps respond
+                teamTextIntent.putExtra("sms_body", "Hello Team,");
+                if (teamTextIntent.resolveActivity(getActivity().getPackageManager())!= null){
+                    startActivity(teamTextIntent);
+                }
+            }
+        });
+
+        emailAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Player> players;
+                //Call the database and use the getAll teams method with team id
+                DatabaseHandler db = new DatabaseHandler(getContext());
+                players = db.getAllTeamPlayers(team.getId());
+                //Make an empty list to store playeremails
+                List<String> playerEmails = new ArrayList<String>();
+                //Fill list by going through the Arraylist of players
+                for (int i = 0; i < players.size(); i++){
+                    playerEmails.add(players.get(i).getEmail());
+                }
+                //Email intent requires an array of strings
+                String[] emails = new String[playerEmails.size()];
+                //Use the arraylist method to convert it
+                playerEmails.toArray(emails);
+                Intent teamEmailIntent = new Intent(Intent.ACTION_VIEW);
+                teamEmailIntent.setData(Uri.parse("mailto:"));  //Email App Only
+                teamEmailIntent.putExtra(Intent.EXTRA_EMAIL, emails);
+                teamEmailIntent.putExtra(Intent.EXTRA_SUBJECT, "Team Message");
+                if (teamEmailIntent.resolveActivity(getActivity().getPackageManager())!= null){
+                    startActivity(teamEmailIntent);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -176,6 +233,50 @@ public class TeamDetailsFragment extends Fragment {
                     alert.show();
 
                     return false;
+                }
+            });
+
+            ImageView callPlayerButton = view.findViewById(R.id.callPlayerButton);
+            ImageView textPlayerButton = view.findViewById(R.id.textPlayerButton);
+            ImageView emailPlayerButton = view.findViewById(R.id.emailPlayerButton);
+
+            callPlayerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int location = viewHolder.getAdapterPosition();
+
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + players.get(location).getPhone() ));
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
+            textPlayerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int location = viewHolder.getAdapterPosition();
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("smsto:" + players.get(location).getPhone()));  // This ensures only SMS apps respond
+                    intent.putExtra("sms_body", "Hello " + players.get(location).getName() + ",");
+                    if (intent.resolveActivity(getActivity().getPackageManager())!= null){
+                        startActivity(intent);
+                    }
+                }
+            });
+
+            emailPlayerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int location = viewHolder.getAdapterPosition();
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("mailto:" + players.get(location).getEmail()));  //Email App Only
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Hello " + players.get(location).getName() + ",");
+                    if (intent.resolveActivity(getActivity().getPackageManager())!= null){
+                        startActivity(intent);
+                    }
                 }
             });
 
