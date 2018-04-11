@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity
         SettingsFragment.OnFragmentInteractionListener,
         CreateTeamFragment.OnFragmentInteractionListener,
         CreatePlayerFragment.OnFragmentInteractionListener,
-        MainFragment.OnFragmentInteractionListener {
+        MainFragment.OnFragmentInteractionListener,
+        UpdatePlayerFragment.OnFragmentInteractionListener {
 
 
     FragmentManager fm;

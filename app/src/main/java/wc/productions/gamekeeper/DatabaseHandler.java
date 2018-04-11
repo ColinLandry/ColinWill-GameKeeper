@@ -443,7 +443,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TEAMNAME, team.getName());
         values.put(COLUMN_TEAMCOACH, team.getCoach());
-        return db.update(TABLE_COACHES, values, COLUMN_ID + "= ?",
+        return db.update(TABLE_TEAMS, values, COLUMN_ID + "= ?",
                 new String[]{String.valueOf(team.getId())});
     }
 
@@ -454,10 +454,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_PLAYERNAME, player.getName());
         values.put(COLUMN_PLAYERPHONE, player.getPhone());
         values.put(COLUMN_PLAYEREMAIL, player.getEmail());
-        return db.update(TABLE_COACHES, values, COLUMN_ID + "= ?",
+        return db.update(TABLE_PLAYERS, values, COLUMN_ID + "= ?",
                 new String[]{String.valueOf(player.getId())});
     }
-    
+
     /**
      * DELETE Operations
      */
