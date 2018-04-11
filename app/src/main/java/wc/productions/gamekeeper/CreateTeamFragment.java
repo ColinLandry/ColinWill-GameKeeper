@@ -49,7 +49,6 @@ public class CreateTeamFragment extends Fragment {
     EditText teamNameInput;
     LinearLayout imageLayout;
 
-    private String logoLocation;
     private int picID;
 
     private OnFragmentInteractionListener mListener;
@@ -102,19 +101,7 @@ public class CreateTeamFragment extends Fragment {
         addLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                File picture = null;
-//                try {
-//                    picture = createTempImageFile();
-//                }
-//                catch(IOException e){
-//                    e.printStackTrace();
-//                }
-//                Intent i = new Intent();
-//                i.setType("image/*");
-//                i.setAction(Intent.ACTION_GET_CONTENT);
                 Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-//                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(picture));
                 if(i.resolveActivity(getActivity().getPackageManager())!= null) {
                     startActivityForResult(Intent.createChooser(i, "Select Picture"), IMAGE_INTENT_LABEL);
                 }
@@ -166,18 +153,10 @@ public class CreateTeamFragment extends Fragment {
                 Uri selectedImage = data.getData();
                 Bitmap image = BitmapFactory.decodeFile(getPath(selectedImage));
 
-                System.out.println(image);
-
                 //Create imageview and show on page
                 ImageView imageView = new ImageView(getContext());
                 imageView.setImageBitmap(image);
                 imageLayout.addView(imageView);
-
-//                //Show the photo
-//                Bitmap image = BitmapFactory.decodeFile(logoLocation);
-//                ImageView imageView = new ImageView(getContext());
-//                imageView.setImageBitmap(image);
-//                imageLayout.addView(imageView);
 
                 //Add to db
                 DatabaseHandler db = new DatabaseHandler(getContext());
@@ -187,6 +166,7 @@ public class CreateTeamFragment extends Fragment {
                             "Photo Added Successfully",
                             Toast.LENGTH_SHORT).show();
                 }
+                db.close();
             }
 
         }
@@ -244,22 +224,9 @@ public class CreateTeamFragment extends Fragment {
         }
     }
 
-    File createTempImageFile() throws IOException {
-        //Create the name
-        String fileName = "gamekeeper_" + System.currentTimeMillis();
-        //Grab the directory
-        File directory =
-                Environment.
-                        getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_PICTURES);
-        File picture  = File.createTempFile(fileName, ".jpg", directory);
-        logoLocation = picture.getAbsolutePath();
-        return picture;
-    }
-
     public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
+        String[] path = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContext().getContentResolver().query(uri, path, null, null, null);
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);

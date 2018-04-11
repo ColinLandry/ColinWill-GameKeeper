@@ -2,6 +2,8 @@ package wc.productions.gamekeeper;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -81,11 +83,18 @@ public class TeamDetailsFragment extends Fragment {
 
         TextView teamName = view.findViewById(R.id.detailsTeamName);
         TextView coachName = view.findViewById(R.id.detailsCoachName);
+        ImageView teamLogo = view.findViewById(R.id.teamDetailsLogo);
 
         //Set values of title and coach name
         if(team != null){
             teamName.setText(team.getName());
             coachName.setText("Coached by: " + team.getCoach());
+
+            //Set image
+            DatabaseHandler db = new DatabaseHandler(getContext());
+            Logo tLogo = db.getLogo(team.getId());
+            Bitmap image =  BitmapFactory.decodeFile(tLogo.getResource());
+            teamLogo.setImageBitmap(image);
         }
 
         RecyclerView list = view.findViewById(R.id.playersRecyclerList);
