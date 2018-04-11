@@ -1,26 +1,28 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SettingsFragment.OnFragmentInteractionListener} interface
+ * {@link CreateTeamFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link CreateTeamFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class CreateTeamFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,11 +31,13 @@ public class SettingsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Button deleteAll;
+
+    EditText coachNameInput;
+    EditText teamNameInput;
 
     private OnFragmentInteractionListener mListener;
 
-    public SettingsFragment() {
+    public CreateTeamFragment() {
         // Required empty public constructor
     }
 
@@ -43,11 +47,11 @@ public class SettingsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
+     * @return A new instance of fragment CreateTeamFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String param1, String param2) {
-        SettingsFragment fragment = new SettingsFragment();
+    public static CreateTeamFragment newInstance(String param1, String param2) {
+        CreateTeamFragment fragment = new CreateTeamFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -64,32 +68,45 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    FragmentManager fm;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_create_team, container, false);
+        MainActivity.fab.hide();
+        coachNameInput = (EditText) view.findViewById(R.id.teamCoachInput);
+        teamNameInput = (EditText) view.findViewById(R.id.teamNameInput);
+        Button submit = (Button) view.findViewById(R.id.submitTeam);
 
-        deleteAll = view.findViewById(R.id.deleteAllButton);
-
-        deleteAll.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("Are you sure you want to clear all data?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //Grab an instance of the database
-                                DatabaseHandler db = new DatabaseHandler(getContext());
-                                //Remove the team from the database
-                                db.resetTables();
+            public void onClick(View v) {
+                //Check if all values filled
+                if (teamNameInput.getText().length() != 0 && coachNameInput.getText().length() != 0){
+                    //Create the team
+                    Team team = new Team(teamNameInput.getText().toString(), coachNameInput.getText().toString());
 
-                                db.close();
-                            }
-                        })
-                        .setNegativeButton("No", null);
-                AlertDialog alert = builder.create();
-                alert.show();
+                    //Grab an instance of the database
+                    DatabaseHandler db = new DatabaseHandler(getContext());
+
+                    //Add the team to the database
+                    db.addTeam(team);
+
+                    //Close the database
+                    db.close();
+
+                    hideKeyboard();
+
+                    //Grab the fragment manager and move us back a page/fragment
+                    fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+
+                    //If not make toast popup
+                }else{
+                    Toast.makeText(getContext(), "Please make sure to fill out all fields", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -134,5 +151,14 @@ public class SettingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void hideKeyboard() {
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }

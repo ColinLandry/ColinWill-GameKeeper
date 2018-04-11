@@ -17,12 +17,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, upcomingGamesFragment.OnFragmentInteractionListener,
+        implements NavigationView.OnNavigationItemSelectedListener,
+        upcomingGamesFragment.OnFragmentInteractionListener,
         viewPagerItemFragment.OnFragmentInteractionListener,
         CreateGameFragment.OnFragmentInteractionListener,
         TeamManagementFragment.OnFragmentInteractionListener,
         TeamDetailsFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener{
+        SettingsFragment.OnFragmentInteractionListener,
+        CreateTeamFragment.OnFragmentInteractionListener,
+        CreatePlayerFragment.OnFragmentInteractionListener,
+        MainFragment.OnFragmentInteractionListener {
 
 
     FragmentManager fm;
@@ -59,6 +63,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentTransaction tr = fm.beginTransaction();
+        tr.replace(R.id.main_content, new MainFragment());
+        tr.commit();
+
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
@@ -108,10 +118,10 @@ public class MainActivity extends AppCompatActivity
         android.support.v4.app.FragmentTransaction tr = fm.beginTransaction();
 
         if (id == R.id.nav_home) {
-            // Handle the home action
-//            tr.replace(R.id.content, new MainFragment());
-//            tr.addToBackStack(null);
-//            tr.commit();
+            //Handle the home action
+            tr.replace(R.id.main_content, new MainFragment());
+            tr.addToBackStack(null);
+            tr.commit();
         } else if (id == R.id.nav_games) {
            tr.replace(R.id.main_content, new upcomingGamesFragment());
             tr.addToBackStack(null);

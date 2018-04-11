@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GameKeeper</string>
+    <string name="app_name">Game Keeper</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -8,4 +8,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Home page -->
+    <string name="welcomeTitle">Welcome to Game Keeper!</string>
+    <string name="welcomeMessage">Welcome to our app! This app is a helpful tool to allow coaches to manage and communicate with their
+    teams. Simply add a team and some players and you can coordinate events, email, or message with your players!</string>
+    <string name="imageDesc">App Icon</string>
+
+    <!-- Placeholders -->
+    <string name="coachTitlePlaceholder">Coached by: Coach Name</string>
 </resources>
