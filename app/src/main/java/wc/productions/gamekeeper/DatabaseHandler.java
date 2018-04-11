@@ -122,7 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Images table
      */
 
-    public static final String CREATE_LOGOS_TABLE = "CREATE TABLE" +
+    public static final String CREATE_LOGOS_TABLE = "CREATE TABLE " +
             TABLE_LOGOS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_RESOURCE + " TEXT)";
 
@@ -130,7 +130,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Teamlogo table
      */
 
-    public static final String CREATE_TEAMLOGO_TABLE = "CREATE TABLE" +
+    public static final String CREATE_TEAMLOGO_TABLE = "CREATE TABLE " +
             TABLE_TEAMLOGO + "(" + COLUMN_TEAMID + " INTEGER REFERENCES " +
             TABLE_TEAMS + "(" + COLUMN_ID + ")," + COLUMN_LOGO +
             " INTEGER REFERENCES " + TABLE_LOGOS + "(" + COLUMN_ID + "))";

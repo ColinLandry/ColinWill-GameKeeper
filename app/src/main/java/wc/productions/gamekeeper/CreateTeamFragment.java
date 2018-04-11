@@ -29,7 +29,6 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CreateTeamFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link CreateTeamFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -39,7 +38,7 @@ public class CreateTeamFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final int CAMERA_INTENT_LABEL = 1;
+    private static final int IMAGE_INTENT_LABEL = 1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,25 +95,25 @@ public class CreateTeamFragment extends Fragment {
         coachNameInput = (EditText) view.findViewById(R.id.teamCoachInput);
         teamNameInput = (EditText) view.findViewById(R.id.teamNameInput);
         Button submit = (Button) view.findViewById(R.id.submitTeam);
-        Button addLogo = (Button) view.findViewById(R.id.addPlayerButton);
+        ImageView addLogo = view.findViewById(R.id.addImageButton);
         imageLayout = view.findViewById(R.id.imageLayout);
 
         addLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                File picture = null;
-                try {
-                    picture = createTempImageFile();
-                }
-                catch(IOException e){
-                    e.printStackTrace();
-                }
+//                File picture = null;
+//                try {
+//                    picture = createTempImageFile();
+//                }
+//                catch(IOException e){
+//                    e.printStackTrace();
+//                }
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
-                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(picture));
+//                i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(picture));
                 if(i.resolveActivity(getActivity().getPackageManager())!= null) {
-                    startActivityForResult(Intent.createChooser(i, "Select Picture"), CAMERA_INTENT_LABEL);
+                    startActivityForResult(Intent.createChooser(i, "Select Picture"), IMAGE_INTENT_LABEL);
                 }
             }
         });
@@ -159,12 +158,14 @@ public class CreateTeamFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CAMERA_INTENT_LABEL && resultCode == RESULT_OK){
+        if(requestCode == IMAGE_INTENT_LABEL && resultCode == RESULT_OK){
             //Show the photo
+            logoLocation = data.getData().getPath();
             Bitmap image = BitmapFactory.decodeFile(logoLocation);
             ImageView imageView = new ImageView(getContext());
             imageView.setImageBitmap(image);
             imageLayout.addView(imageView);
+
             //Add to db
             DatabaseHandler db = new DatabaseHandler(getContext());
             picID = db.addLogo(new Logo(logoLocation));
@@ -180,7 +181,6 @@ public class CreateTeamFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -230,9 +230,9 @@ public class CreateTeamFragment extends Fragment {
     }
 
     File createTempImageFile() throws IOException {
-        //Create the name of the image
-        String fileName = "hiking_app_2018_" + System.currentTimeMillis();
-        //Grab the directory we want to save the image in
+        //Create the name
+        String fileName = "gamekeeper_" + System.currentTimeMillis();
+        //Grab the directory
         File directory =
                 Environment.
                         getExternalStoragePublicDirectory(
