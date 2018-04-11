@@ -1,12 +1,17 @@
 package wc.productions.gamekeeper;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
+import android.content.Intent;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -86,7 +91,20 @@ public class viewPagerItemFragment extends Fragment {
             matchDate.setText(mParam3);
         }
 
-
+        ImageView calendarButton = view.findViewById(R.id.createCalendarEvent);
+        calendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_INSERT);
+                intent.setData(CalendarContract.Events.CONTENT_URI);
+                intent.putExtra(CalendarContract.Events.TITLE, "");
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, "");
+                intent.putExtra(CalendarContract.Events.EVENT_COLOR, "");
+                if (intent.resolveActivity(getActivity().getPackageManager())!= null){
+                    startActivity(intent);
+                }
+            }
+        });
 
         return view;
     }
