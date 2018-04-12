@@ -240,6 +240,18 @@ public class TeamDetailsFragment extends Fragment {
                 }
             });
 
+            viewHolder.editPlayer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = viewHolder.getAdapterPosition();
+                    UpdatePlayerFragment td = UpdatePlayerFragment.newInstance(players.get(position));
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.main_content, td);
+                    ft.commit();
+                }
+            });
+
             ImageView callPlayerButton = view.findViewById(R.id.callPlayerButton);
             ImageView textPlayerButton = view.findViewById(R.id.textPlayerButton);
             ImageView emailPlayerButton = view.findViewById(R.id.emailPlayerButton);
@@ -291,7 +303,7 @@ public class TeamDetailsFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Player player = players.get(position);
             ((CustomViewHolder) holder).playerName.setText(player.getName());
-            ((CustomViewHolder) holder).playerPhone.setText(player.getPhone() + "");
+            ((CustomViewHolder) holder).playerPhone.setText(player.getPhone());
             ((CustomViewHolder) holder).playerEmail.setText(player.getEmail());
         }
 
@@ -304,6 +316,7 @@ public class TeamDetailsFragment extends Fragment {
             protected TextView playerName;
             protected TextView playerPhone;
             protected TextView playerEmail;
+            protected ImageView editPlayer;
 
             /**
              * Set the holder items to the corresponding view locations
@@ -314,6 +327,7 @@ public class TeamDetailsFragment extends Fragment {
                 this.playerName = view.findViewById(R.id.playerName);
                 this.playerPhone = view.findViewById(R.id.playerPhone);
                 this.playerEmail = view.findViewById(R.id.playerEmail);
+                this.editPlayer = view.findViewById(R.id.editPlayer);
             }
 
         }

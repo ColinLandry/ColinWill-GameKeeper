@@ -1,10 +1,13 @@
 package wc.productions.gamekeeper;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by colinlandry on 2018-03-29.
  */
 
-public class Player {
+public class Player implements Parcelable {
 
     private int id;
     private String name;
@@ -55,4 +58,36 @@ public class Player {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(this.id);
+        parcel.writeString(this.name);
+        parcel.writeString(this.phone);
+        parcel.writeString(this.email);
+    }
+
+    protected Player(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.phone = in.readString();
+        this.email = in.readString();
+    }
+
+    public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>() {
+        @Override
+        public Player createFromParcel(Parcel source) {
+            return new Player(source);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
 }

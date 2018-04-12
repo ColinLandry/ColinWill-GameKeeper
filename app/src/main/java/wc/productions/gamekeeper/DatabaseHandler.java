@@ -434,6 +434,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * UPDATE Operations
+     */
+
+    //Update team
+    public int updateTeam(Team team){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEAMNAME, team.getName());
+        values.put(COLUMN_TEAMCOACH, team.getCoach());
+        return db.update(TABLE_TEAMS, values, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(team.getId())});
+    }
+
+    //Update player
+    public int updatePlayer(Player player){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLAYERNAME, player.getName());
+        values.put(COLUMN_PLAYERPHONE, player.getPhone());
+        values.put(COLUMN_PLAYEREMAIL, player.getEmail());
+        return db.update(TABLE_PLAYERS, values, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(player.getId())});
+    }
+
+    //Update team logo
+    public int updateLogo(Logo logo){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Update resource path in logo table
+        ContentValues v = new ContentValues();
+        v.put(COLUMN_RESOURCE, logo.getResource());
+        return db.update(TABLE_LOGOS, v, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(logo.getId())});
+    }
+
+    /**
      * DELETE Operations
      */
 

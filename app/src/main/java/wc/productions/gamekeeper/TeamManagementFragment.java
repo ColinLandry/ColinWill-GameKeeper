@@ -187,6 +187,18 @@ public class TeamManagementFragment extends Fragment {
                 }
             });
 
+            viewHolder.editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = viewHolder.getAdapterPosition();
+                    UpdateTeamFragment td = UpdateTeamFragment.newInstance(teams.get(position));
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.main_content, td);
+                    ft.commit();
+                }
+            });
+
             return viewHolder;
         }
 
@@ -236,6 +248,7 @@ public class TeamManagementFragment extends Fragment {
             protected TextView teamName;
             protected TextView coachName;
             protected ImageView teamLogo;
+            protected ImageView editButton;
 
             /**
              * Set the holder items to the corresponding view locations
@@ -246,6 +259,7 @@ public class TeamManagementFragment extends Fragment {
                 this.teamName = view.findViewById(R.id.teamName);
                 this.coachName = view.findViewById(R.id.coachName);
                 this.teamLogo = view.findViewById(R.id.teamLogoView);
+                this.editButton = view.findViewById(R.id.editTeam);
             }
         }
     }

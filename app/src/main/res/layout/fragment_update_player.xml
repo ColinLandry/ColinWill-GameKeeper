@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="wc.productions.gamekeeper.CreateTeamFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context="wc.productions.gamekeeper.CreatePlayerFragment">
 
     <LinearLayout
-        android:id="@+id/teamNameLayout"
+        android:id="@+id/nameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -20,25 +18,29 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/teamNameLabel"
+            android:id="@+id/playerNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Team Name"
-            android:textAlignment="center" />
+            android:text="Player Name"
+            android:textAlignment="center"
+            tools:layout_editor_absoluteX="46dp"
+            tools:layout_editor_absoluteY="43dp" />
 
         <EditText
-            android:id="@+id/teamNameInput"
+            android:id="@+id/playerNameInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            tools:layout_editor_absoluteX="153dp"
+            tools:layout_editor_absoluteY="5dp" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/teamCoachLayout"
+        android:id="@+id/phoneLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -46,82 +48,71 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/teamNameLayout">
+        app:layout_constraintTop_toBottomOf="@+id/nameLayout">
 
         <TextView
-            android:id="@+id/teamCoachLabel"
+            android:id="@+id/playerPhoneLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Coach Name"
-            android:textAlignment="center" />
+            android:text="Player Phone"
+            android:textAlignment="center"
+            tools:layout_editor_absoluteX="46dp"
+            tools:layout_editor_absoluteY="77dp" />
 
         <EditText
-            android:id="@+id/teamCoachInput"
+            android:id="@+id/playerPhoneInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="phone"
+            tools:layout_editor_absoluteX="153dp"
+            tools:layout_editor_absoluteY="62dp" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/teamLogoLayout"
+        android:id="@+id/emailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/teamCoachLayout">
+        app:layout_constraintTop_toBottomOf="@+id/phoneLayout">
 
         <TextView
-            android:id="@+id/teamLogoLabel"
+            android:id="@+id/playerEmailLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add a team logo!"
-            android:textAlignment="center" />
+            android:text="Player Email"
+            android:textAlignment="center"
+            tools:layout_editor_absoluteX="46dp"
+            tools:layout_editor_absoluteY="166dp" />
 
-        <ImageView
-            android:id="@+id/addImageButton"
+        <EditText
+            android:id="@+id/playerEmailInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
-            android:tint="@color/colorPrimary" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/imageLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/createTeam"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/teamLogoLayout">
-
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            tools:layout_editor_absoluteX="153dp"
+            tools:layout_editor_absoluteY="153dp" />
     </LinearLayout>
 
     <Button
-        android:id="@+id/createTeam"
+        android:id="@+id/updatePlayer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Create team!"
+        android:text="Update Player"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>

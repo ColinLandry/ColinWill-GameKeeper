@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add a team logo!"
+            android:text="Change team logo"
             android:textAlignment="center" />
 
         <ImageView
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
+            android:src="@drawable/ic_edit_black_24dp"
             android:tint="@color/colorPrimary" />
     </LinearLayout>
 
@@ -105,7 +105,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/createTeam"
+        app:layout_constraintBottom_toTopOf="@+id/updateTeam"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,12 +114,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/createTeam"
+        android:id="@+id/updateTeam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Create team!"
+        android:text="Update team"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent" />
 
