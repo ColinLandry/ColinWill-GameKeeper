@@ -1,12 +1,15 @@
 package wc.productions.gamekeeper;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * Created by colinlandry on 2018-04-02.
  */
 
-public class Game {
+public class Game implements Parcelable{
     private int id;
     private String name;
     private String date;
@@ -59,4 +62,37 @@ public class Game {
     public void setTeam2(int team2) {
         this.team2 = team2;
     }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(this.id);
+        parcel.writeString(this.name);
+        parcel.writeString(this.date);
+        parcel.writeInt(this.team1);
+        parcel.writeInt(this.team2);
+    }
+
+    protected Game(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.date = in.readString();
+        this.team1 = in.readInt();
+        this.team2 = in.readInt();
+    }
+
+    public static final Parcelable.Creator<Game> CREATOR = new Parcelable.Creator<Game>() {
+        @Override
+        public Game createFromParcel(Parcel source) {
+            return new Game(source);
+        }
+
+        @Override
+        public Game[] newArray(int size) {
+            return new Game[size];
+        }
+    };
 }

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -140,7 +141,7 @@ public class TeamDetailsFragment extends Fragment {
 
         Button textAllButton = view.findViewById(R.id.textAllPlayersButton);
         Button emailAllButton = view.findViewById(R.id.emailAllPlayersButton);
-
+        final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         textAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,7 +158,7 @@ public class TeamDetailsFragment extends Fragment {
                 }
                 Intent teamTextIntent = new Intent(Intent.ACTION_VIEW);
                 teamTextIntent.setData(Uri.parse("smsto:" + playerNumbers));  // This ensures only SMS apps respond
-                teamTextIntent.putExtra("sms_body", "Hello Team,");
+                teamTextIntent.putExtra("sms_body", sharedPref.getString("greeting","Hello") + "Team,");
                 if (teamTextIntent.resolveActivity(getActivity().getPackageManager())!= null){
                     startActivity(teamTextIntent);
                 }
@@ -255,7 +256,7 @@ public class TeamDetailsFragment extends Fragment {
             ImageView callPlayerButton = view.findViewById(R.id.callPlayerButton);
             ImageView textPlayerButton = view.findViewById(R.id.textPlayerButton);
             ImageView emailPlayerButton = view.findViewById(R.id.emailPlayerButton);
-
+            final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
             callPlayerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -275,7 +276,7 @@ public class TeamDetailsFragment extends Fragment {
 
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("smsto:" + players.get(location).getPhone()));  // This ensures only SMS apps respond
-                    intent.putExtra("sms_body", "Hello " + players.get(location).getName() + ",");
+                    intent.putExtra("sms_body", sharedPref.getString("greeting","Hello") + players.get(location).getName() + ",");
                     if (intent.resolveActivity(getActivity().getPackageManager())!= null){
                         startActivity(intent);
                     }
@@ -289,7 +290,7 @@ public class TeamDetailsFragment extends Fragment {
 
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("mailto:" + players.get(location).getEmail()));  //Email App Only
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Hello " + players.get(location).getName() + ",");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, sharedPref.getString("greeting","Hello") + players.get(location).getName() + ",");
                     if (intent.resolveActivity(getActivity().getPackageManager())!= null){
                         startActivity(intent);
                     }
