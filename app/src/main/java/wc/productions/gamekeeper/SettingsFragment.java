@@ -5,13 +5,16 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 /**
@@ -74,20 +77,24 @@ public class SettingsFragment extends Fragment {
         final EditText greeting = view.findViewById(R.id.customGreeting);
         final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPref.edit();
-        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        Button confirmButton = view.findViewById(R.id.confirmUserSettings);
+
+        //Set text of greetings edittext
+        greeting.setText(sharedPref.getString("greeting", "Hello"));
+        username.setText(sharedPref.getString("username", "User Name"));
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
+            public void onClick(View view) {
                 editor.putString("username", username.getText().toString());
+                editor.putString("greeting", greeting.getText().toString() + " ");
                 editor.apply();
+
+                MainActivity.navUsername.setText(sharedPref.getString("username", "User Name"));
+                hideKeyboard();
             }
         });
-        greeting.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                editor.putString("greeting", greeting.getText().toString());
-                editor.apply();
-            }
-        });
+
         deleteAll = view.findViewById(R.id.deleteAllButton);
 
         deleteAll.setOnClickListener(new View.OnClickListener() {
@@ -153,5 +160,14 @@ public class SettingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void hideKeyboard() {
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }
