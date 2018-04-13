@@ -142,10 +142,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_info) {
             LibsSupportFragment fragment = new LibsBuilder()
                     .withFields(R.string.class.getFields())
-                    .withLibraries("picasso", "androidbootstrap", "snackbar", "aboutlibraries")
+                    .withAboutAppName(getString(R.string.app_name))
                     .withVersionShown(false)
                     .withLicenseShown(false)
-                    .withLibraryModification("aboutlibraries", Libs.LibraryFields.LIBRARY_NAME, "_AboutLibraries")
                     .supportFragment();
             tr.replace(R.id.main_content, fragment);
             tr.addToBackStack(null);
