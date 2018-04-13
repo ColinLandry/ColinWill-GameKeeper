@@ -2,6 +2,8 @@ package wc.productions.gamekeeper;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -17,15 +19,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,11 +83,18 @@ public class TeamDetailsFragment extends Fragment {
 
         TextView teamName = view.findViewById(R.id.detailsTeamName);
         TextView coachName = view.findViewById(R.id.detailsCoachName);
+        ImageView teamLogo = view.findViewById(R.id.teamDetailsLogo);
 
         //Set values of title and coach name
         if(team != null){
             teamName.setText(team.getName());
             coachName.setText("Coached by: " + team.getCoach());
+
+            //Set image
+            DatabaseHandler db = new DatabaseHandler(getContext());
+            Logo tLogo = db.getLogo(team.getId());
+            Bitmap image =  BitmapFactory.decodeFile(tLogo.getResource());
+            teamLogo.setImageBitmap(image);
         }
 
         RecyclerView list = view.findViewById(R.id.playersRecyclerList);
@@ -237,6 +241,18 @@ public class TeamDetailsFragment extends Fragment {
                 }
             });
 
+            viewHolder.editPlayer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = viewHolder.getAdapterPosition();
+                    UpdatePlayerFragment td = UpdatePlayerFragment.newInstance(players.get(position));
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.main_content, td);
+                    ft.commit();
+                }
+            });
+
             ImageView callPlayerButton = view.findViewById(R.id.callPlayerButton);
             ImageView textPlayerButton = view.findViewById(R.id.textPlayerButton);
             ImageView emailPlayerButton = view.findViewById(R.id.emailPlayerButton);
@@ -288,7 +304,7 @@ public class TeamDetailsFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Player player = players.get(position);
             ((CustomViewHolder) holder).playerName.setText(player.getName());
-            ((CustomViewHolder) holder).playerPhone.setText(player.getPhone() + "");
+            ((CustomViewHolder) holder).playerPhone.setText(player.getPhone());
             ((CustomViewHolder) holder).playerEmail.setText(player.getEmail());
         }
 
@@ -301,6 +317,7 @@ public class TeamDetailsFragment extends Fragment {
             protected TextView playerName;
             protected TextView playerPhone;
             protected TextView playerEmail;
+            protected ImageView editPlayer;
 
             /**
              * Set the holder items to the corresponding view locations
@@ -311,6 +328,7 @@ public class TeamDetailsFragment extends Fragment {
                 this.playerName = view.findViewById(R.id.playerName);
                 this.playerPhone = view.findViewById(R.id.playerPhone);
                 this.playerEmail = view.findViewById(R.id.playerEmail);
+                this.editPlayer = view.findViewById(R.id.editPlayer);
             }
 
         }

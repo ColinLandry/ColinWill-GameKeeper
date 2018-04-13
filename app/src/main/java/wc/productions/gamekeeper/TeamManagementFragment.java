@@ -2,6 +2,8 @@ package wc.productions.gamekeeper;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,8 +19,12 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -181,6 +187,18 @@ public class TeamManagementFragment extends Fragment {
                 }
             });
 
+            viewHolder.editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = viewHolder.getAdapterPosition();
+                    UpdateTeamFragment td = UpdateTeamFragment.newInstance(teams.get(position));
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.main_content, td);
+                    ft.commit();
+                }
+            });
+
             return viewHolder;
         }
 
@@ -189,8 +207,17 @@ public class TeamManagementFragment extends Fragment {
             Team team = teams.get(position);
             ((CustomViewHolder) holder).teamName.setText(team.getName());
             ((CustomViewHolder) holder).coachName.setText(team.getCoach());
+
+            //Set image
+            DatabaseHandler db = new DatabaseHandler(context);
+            Logo tLogo = db.getLogo(team.getId());
             setAnimation(holder.itemView);
 
+            System.out.println(tLogo.getResource());
+
+            Picasso.with(context).load(new File(tLogo.getResource()))
+                    .placeholder(R.drawable.placeholder)
+                    .into(((CustomViewHolder) holder).teamLogo);
         }
 
         /**
@@ -220,6 +247,8 @@ public class TeamManagementFragment extends Fragment {
         class CustomViewHolder extends RecyclerView.ViewHolder{
             protected TextView teamName;
             protected TextView coachName;
+            protected ImageView teamLogo;
+            protected ImageView editButton;
 
             /**
              * Set the holder items to the corresponding view locations
@@ -229,6 +258,8 @@ public class TeamManagementFragment extends Fragment {
                 super(view);
                 this.teamName = view.findViewById(R.id.teamName);
                 this.coachName = view.findViewById(R.id.coachName);
+                this.teamLogo = view.findViewById(R.id.teamLogoView);
+                this.editButton = view.findViewById(R.id.editTeam);
             }
         }
     }

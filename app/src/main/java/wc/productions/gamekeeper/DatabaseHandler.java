@@ -33,7 +33,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TABLE_TEAMS = "teams";
     public static final String TABLE_COACHES = "coaches";
     public static final String TABLE_PLAYERTEAM = "playerteam";
-
+    public static final String TABLE_TEAMLOGO = "teamlogo";
+    public static final String TABLE_LOGOS = "logos";
     /**
      * Create common column names
      */
@@ -72,6 +73,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COLUMN_TEAMID = "teamid";
 
     /**
+     * Images table column names
+     */
+
+    public static final String COLUMN_RESOURCE = "resource";
+
+    /**
+     * Imagesteams table column names
+     */
+
+    public static final String COLUMN_LOGO = "logo";
+
+    /**
      * Create statements
      */
 
@@ -104,7 +117,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             TABLE_TEAMS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
             + COLUMN_TEAMNAME + " TEXT,"
             + COLUMN_TEAMCOACH + " TEXT)";
-//            + COLUMN_TEAMCOACH + " INTEGER REFERENCES " + TABLE_COACHES + "(" + COLUMN_ID + "))";
+
+    /**
+     * Images table
+     */
+
+    public static final String CREATE_LOGOS_TABLE = "CREATE TABLE " +
+            TABLE_LOGOS + "(" + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_RESOURCE + " TEXT)";
+
+    /**
+     * Teamlogo table
+     */
+
+    public static final String CREATE_TEAMLOGO_TABLE = "CREATE TABLE " +
+            TABLE_TEAMLOGO + "(" + COLUMN_TEAMID + " INTEGER REFERENCES " +
+            TABLE_TEAMS + "(" + COLUMN_ID + ")," + COLUMN_LOGO +
+            " INTEGER REFERENCES " + TABLE_LOGOS + "(" + COLUMN_ID + "))";
 
     /**
      * Playerteams table
@@ -121,11 +150,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        db.execSQL(CREATE_COACHES_TABLE);
         db.execSQL(CREATE_GAMES_TABLE);
         db.execSQL(CREATE_PLAYER_TABLE);
         db.execSQL(CREATE_TEAMS_TABLE);
         db.execSQL(CREATE_PLAYERTEAMS_TABLE);
+        db.execSQL(CREATE_LOGOS_TABLE);
+        db.execSQL(CREATE_TEAMLOGO_TABLE);
     }
 
     @Override
@@ -134,6 +164,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GAMES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERTEAM);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMLOGO);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGOS);
     }
 
     /**
@@ -193,6 +225,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             team.setId(id);
         }
         db.close();
+    }
+
+    /**
+     * Create logo
+     */
+
+    public void addTeamLogo(int logo, int team){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEAMID, team);
+        values.put(COLUMN_LOGO, logo);
+        db.insert(TABLE_TEAMLOGO, null, values);
+        db.close();
+    }
+
+    public int addLogo(Logo logo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RESOURCE, logo.getResource());
+        db.insert(TABLE_LOGOS, null, values);
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
+        if(cursor.moveToFirst()) {
+            int location = Integer.parseInt(cursor.getString(0));
+            db.close();
+            return location;
+        }
+        return -1;
     }
 
     /**
@@ -292,6 +352,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return player;
     }
 
+    //Get all team players
     public ArrayList<Player> getAllTeamPlayers(int team) {
         ArrayList<Player> playerList = new ArrayList<Player>();
         String selectQuery = "SELECT  * FROM " + TABLE_PLAYERTEAM + " WHERE " + COLUMN_TEAMID + " = " + team;
@@ -315,12 +376,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return playerList;
     }
 
-    /**
-     * Dont know how to grab and populate arraylist of players from database, might need to make a
-     * loop to grab from tableplayers team where id is equal to team id
-     *
-     * maybe use addplayertoteam function matching id
-     */
+    //Get team logo
+    public Logo getLogo(int team) {
+        Logo teamLogo = new Logo();
+        String selectQuery = "SELECT  * FROM " + TABLE_TEAMLOGO + " WHERE " + COLUMN_TEAMID + " = " + team;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String innerQuery = "SELECT * FROM " + TABLE_LOGOS + " WHERE " + COLUMN_ID + "=" + cursor.getInt(1);
+                Cursor innerCursor = db.rawQuery(innerQuery, null);
+                if (innerCursor.moveToFirst()) {
+                    do {
+                        teamLogo.setId(Integer.parseInt(innerCursor.getString(0)));
+                        teamLogo.setResource(innerCursor.getString(1));
+                    } while (innerCursor.moveToNext());
+                }
+            }while (cursor.moveToNext());
+        }
+        return teamLogo;
+    }
+
     //Retrieve all teams
     public ArrayList<Team> getAllTeams(){
         ArrayList<Team> teamList = new ArrayList<Team>();
@@ -355,6 +431,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
         return team;
+    }
+
+    /**
+     * UPDATE Operations
+     */
+
+    //Update team
+    public int updateTeam(Team team){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEAMNAME, team.getName());
+        values.put(COLUMN_TEAMCOACH, team.getCoach());
+        return db.update(TABLE_TEAMS, values, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(team.getId())});
+    }
+
+    //Update player
+    public int updatePlayer(Player player){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLAYERNAME, player.getName());
+        values.put(COLUMN_PLAYERPHONE, player.getPhone());
+        values.put(COLUMN_PLAYEREMAIL, player.getEmail());
+        return db.update(TABLE_PLAYERS, values, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(player.getId())});
+    }
+
+    //Update team logo
+    public int updateLogo(Logo logo){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Update resource path in logo table
+        ContentValues v = new ContentValues();
+        v.put(COLUMN_RESOURCE, logo.getResource());
+        return db.update(TABLE_LOGOS, v, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(logo.getId())});
     }
 
     /**
@@ -440,11 +552,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COACHES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYERTEAM);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMLOGO);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGOS);
 
         db.execSQL(CREATE_GAMES_TABLE);
         db.execSQL(CREATE_PLAYER_TABLE);
         db.execSQL(CREATE_TEAMS_TABLE);
         db.execSQL(CREATE_PLAYERTEAMS_TABLE);
+        db.execSQL(CREATE_LOGOS_TABLE);
+        db.execSQL(CREATE_TEAMLOGO_TABLE);
     }
 
 }
