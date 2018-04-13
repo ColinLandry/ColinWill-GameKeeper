@@ -98,7 +98,7 @@ public class viewPagerItemFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setData(CalendarContract.Events.CONTENT_URI);
                 intent.putExtra(CalendarContract.Events.TITLE, "");
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, "");
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, mParam1 + " VS " + mParam2);
                 intent.putExtra(CalendarContract.Events.EVENT_COLOR, "");
                 if (intent.resolveActivity(getActivity().getPackageManager())!= null){
                     startActivity(intent);

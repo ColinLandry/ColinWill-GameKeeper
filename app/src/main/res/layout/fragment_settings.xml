@@ -22,17 +22,18 @@
         android:ems="10" />
 
     <TextView
-        android:id="@+id/userEmailLabel"
+        android:id="@+id/greetingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email:" />
+        android:text="Custom Greeting" />
 
     <EditText
-        android:id="@+id/userEmail"
+        android:id="@+id/customGreeting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="1"
-        android:ems="10" />
+        android:ems="10"
+        android:hint="Hello" />
 
     <Button
         android:id="@+id/deleteAllButton"
