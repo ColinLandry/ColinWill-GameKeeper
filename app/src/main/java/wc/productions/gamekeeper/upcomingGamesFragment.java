@@ -126,13 +126,9 @@ public class upcomingGamesFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            //Requires param1 String and param2 int
+                Game game = list.get(position);
 
-            //Collections.sort(arraylist);
-
-                team1 = db.getTeam(list.get(position).getTeam1());
-                team2 = db.getTeam(list.get(position).getTeam2());
-                return viewPagerItemFragment.newInstance(team1.getName(), team2.getName(), list.get(position).getDate());
+                return viewPagerItemFragment.newInstance(game);
 
         }
 
