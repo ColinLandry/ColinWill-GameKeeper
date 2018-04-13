@@ -16,6 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.mikepenz.aboutlibraries.ui.LibsFragment;
+import com.mikepenz.aboutlibraries.ui.LibsSupportFragment;
+
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         upcomingGamesFragment.OnFragmentInteractionListener,
@@ -132,7 +138,16 @@ public class MainActivity extends AppCompatActivity
             tr.addToBackStack(null);
             tr.commit();
         } else if (id == R.id.nav_info) {
-
+            LibsSupportFragment fragment = new LibsBuilder()
+                    .withFields(R.string.class.getFields())
+                    .withLibraries("picasso", "androidbootstrap", "snackbar", "aboutlibraries")
+                    .withVersionShown(false)
+                    .withLicenseShown(false)
+                    .withLibraryModification("aboutlibraries", Libs.LibraryFields.LIBRARY_NAME, "_AboutLibraries")
+                    .supportFragment();
+            tr.replace(R.id.main_content, fragment);
+            tr.addToBackStack(null);
+            tr.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

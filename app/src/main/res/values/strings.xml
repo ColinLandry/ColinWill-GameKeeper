@@ -17,4 +17,7 @@
 
     <!-- Placeholders -->
     <string name="coachTitlePlaceholder">Coached by: Coach Name</string>
+    <string name="aboutLibraries_description_showIcon">true</string>
+    <string name="aboutLibraries_description_showVersion">true</string>
+    <string name="aboutLibraries_description_text">An app to manage teams</string>
 </resources>
