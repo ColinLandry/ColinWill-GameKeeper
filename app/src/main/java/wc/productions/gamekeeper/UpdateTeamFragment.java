@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -20,6 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.danimahardhika.cafebar.CafeBar;
+import com.danimahardhika.cafebar.CafeBarTheme;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -148,7 +152,12 @@ public class UpdateTeamFragment extends Fragment {
 
                     //If not make toast popup
                 }else{
-                    Toast.makeText(getContext(), "Please make sure to fill out all fields", Toast.LENGTH_SHORT).show();
+                    CafeBar.builder(getContext())
+                            .content("Please make sure to fill out all fields")
+                            .floating(true)
+                            .fitSystemWindow()
+                            .theme(CafeBarTheme.Custom(Color.parseColor("#ff453f")))
+                            .show();
                 }
 
             }

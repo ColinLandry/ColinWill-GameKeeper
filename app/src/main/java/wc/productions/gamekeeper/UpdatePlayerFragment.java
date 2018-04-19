@@ -1,6 +1,7 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,6 +14,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.danimahardhika.cafebar.CafeBar;
+import com.danimahardhika.cafebar.CafeBarTheme;
 
 
 /**
@@ -121,15 +125,29 @@ public class UpdatePlayerFragment extends Fragment {
                             fm = getActivity().getSupportFragmentManager();
                             fm.popBackStack();
                         }else{
-                            Toast.makeText(getContext(), "Email input error, please use correct email format", Toast.LENGTH_SHORT).show();
+                            CafeBar.builder(getContext())
+                                    .content("Email input error, please use correct email format")
+                                    .floating(true)
+                                    .fitSystemWindow()
+                                    .theme(CafeBarTheme.Custom(Color.parseColor("#ffde59")))
+                                    .show();
                         }
                         //If the number is too long, display toast
                     }else{
-                        Toast.makeText(getContext(), "Number input error, use format (##########)", Toast.LENGTH_SHORT).show();
-                    }
+                        CafeBar.builder(getContext())
+                                .content("Number input error, use format (##########)")
+                                .floating(true)
+                                .fitSystemWindow()
+                                .theme(CafeBarTheme.Custom(Color.parseColor("#ffde59")))
+                                .show();                    }
                     //Toast popup
                 }else{
-                    Toast.makeText(getContext(), "Please make sure to fill out all fields", Toast.LENGTH_SHORT).show();
+                    CafeBar.builder(getContext())
+                            .content("Please make sure to fill out all fields")
+                            .floating(true)
+                            .fitSystemWindow()
+                            .theme(CafeBarTheme.Custom(Color.parseColor("#ff453f")))
+                            .show();
                 }
 
             }

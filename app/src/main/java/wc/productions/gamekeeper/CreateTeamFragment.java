@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,6 +20,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.danimahardhika.cafebar.CafeBar;
+import com.danimahardhika.cafebar.CafeBarDuration;
+import com.danimahardhika.cafebar.CafeBarTheme;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -109,30 +114,45 @@ public class CreateTeamFragment extends Fragment {
             public void onClick(View v) {
                 //Check if all values filled
                 if (teamNameInput.getText().length() != 0 && coachNameInput.getText().length() != 0){
-                    //Create the team
-                    Team team = new Team(teamNameInput.getText().toString(), coachNameInput.getText().toString());
+                    //Check if an image has been selected
+                    if(imageLayout.getChildCount() != 0){
+                        //Create the team
+                        Team team = new Team(teamNameInput.getText().toString(), coachNameInput.getText().toString());
 
-                    //Grab an instance of the database
-                    DatabaseHandler db = new DatabaseHandler(getContext());
+                        //Grab an instance of the database
+                        DatabaseHandler db = new DatabaseHandler(getContext());
 
-                    //Add the team to the database
-                    db.addTeam(team);
+                        //Add the team to the database
+                        db.addTeam(team);
 
-                    //Connect image logo to team
-                    db.addTeamLogo(picID, team.getId());
+                        //Connect image logo to team
+                        db.addTeamLogo(picID, team.getId());
 
-                    //Close the database
-                    db.close();
+                        //Close the database
+                        db.close();
 
-                    hideKeyboard();
+                        hideKeyboard();
 
-                    //Grab the fragment manager and move us back a page/fragment
-                    fm = getActivity().getSupportFragmentManager();
-                    fm.popBackStack();
+                        //Grab the fragment manager and move us back a page/fragment
+                        fm = getActivity().getSupportFragmentManager();
+                        fm.popBackStack();
 
+                    }else{
+                        CafeBar.builder(getContext())
+                                .content("No team logo selected")
+                                .floating(true)
+                                .fitSystemWindow()
+                                .theme(CafeBarTheme.Custom(Color.parseColor("#ff453f")))
+                                .show();
+                    }
                     //If not make toast popup
                 }else{
-                    Toast.makeText(getContext(), "Please make sure to fill out all fields", Toast.LENGTH_SHORT).show();
+                    CafeBar.builder(getContext())
+                            .content("Please make sure to fill out all fields")
+                            .floating(true)
+                            .fitSystemWindow()
+                            .theme(CafeBarTheme.Custom(Color.parseColor("#ff453f")))
+                            .show();
                 }
 
             }
