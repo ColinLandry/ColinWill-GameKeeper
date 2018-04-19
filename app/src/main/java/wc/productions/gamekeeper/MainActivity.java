@@ -1,5 +1,7 @@
 package wc.productions.gamekeeper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,11 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.aboutlibraries.ui.LibsFragment;
 import com.mikepenz.aboutlibraries.ui.LibsSupportFragment;
+
+import org.w3c.dom.Text;
 
 
 public class MainActivity extends AppCompatActivity
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity
 
     FragmentManager fm;
     public static FloatingActionButton fab;
+    public static TextView navUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,14 @@ public class MainActivity extends AppCompatActivity
         fm = getSupportFragmentManager();
 
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+
+        //Set nav text item
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        navUsername = (TextView) headerView.findViewById(R.id.navUserName);
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        navUsername.setText(sharedPref.getString("username", "User Name"));
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.hide();
@@ -69,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentTransaction tr = fm.beginTransaction();
@@ -140,6 +153,7 @@ public class MainActivity extends AppCompatActivity
             tr.addToBackStack(null);
             tr.commit();
         } else if (id == R.id.nav_info) {
+            fab.hide();
             LibsSupportFragment fragment = new LibsBuilder()
                     .withFields(R.string.class.getFields())
                     .withAboutAppName(getString(R.string.app_name))
