@@ -2,6 +2,7 @@ package wc.productions.gamekeeper;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
+import android.widget.Toast;
+
+import com.danimahardhika.cafebar.CafeBar;
+import com.danimahardhika.cafebar.CafeBarTheme;
 
 
 /**
@@ -150,21 +156,32 @@ public class CreateGameFragment extends Fragment {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Grab an instance of the database
-                DatabaseHandler db = new DatabaseHandler(getContext());
-                //Add the location to the database
-                db.addGame( name.getText().toString(),
-                        dateText.getText().toString(),
-                        teamOne,teamTwo);
-                //Close the database
-                db.close();
-                //Hide keyboard
-                hideKeyboard();
-                //Grab the fragment manager and move us back a page/fragment
-                fm = getActivity().getSupportFragmentManager();
+
+                if(name.getText().length() != 0 &&dateText.getText().length() != 0
+                        && teamOne.getName().length() != 0 && teamTwo.getName().length() != 0) {
+                    //Grab an instance of the database
+                    DatabaseHandler db = new DatabaseHandler(getContext());
+                    //Add the location to the database
+                    db.addGame(name.getText().toString(),
+                            dateText.getText().toString(),
+                            teamOne, teamTwo);
+                    //Close the database
+                    db.close();
+                    //Hide keyboard
+                    hideKeyboard();
+                    //Grab the fragment manager and move us back a page/fragment
+                    fm = getActivity().getSupportFragmentManager();
 
 
-                fm.popBackStack();
+                    fm.popBackStack();
+                }else{
+                    CafeBar.builder(getContext())
+                            .content("Please Fill Out All Fields")
+                            .floating(true)
+                            .fitSystemWindow()
+                            .theme(CafeBarTheme.Custom(Color.parseColor("#ffde59")))
+                            .show();
+                }
             }
         });
 
