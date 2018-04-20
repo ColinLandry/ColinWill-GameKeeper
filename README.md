@@ -12,6 +12,12 @@ It is a useful tool that will be able to help you manage your teams more efficie
 
 <img width="302" alt="gamespage" src="https://user-images.githubusercontent.com/32267705/39008136-d5c7880e-43d5-11e8-9981-38a27ea1fd33.png">   <img width="302" alt="teamdetails" src="https://user-images.githubusercontent.com/32267705/39008211-07fbc74a-43d6-11e8-9fb2-3d25a7b76422.png">
 
+## HD Icon
+<img alt="hdIcon" src="https://user-images.githubusercontent.com/32267692/39060967-d5c08a84-4490-11e8-9f99-20a4027de068.png">
+
+## Featured Image
+<img alt="featuredImage" src="https://user-images.githubusercontent.com/32267692/39060833-6d467b12-4490-11e8-93a3-081bcf74d44f.png">
+
 ## Git Config Instructions
 `git config --global user.name` `<<<YOUR NAME HERE>>>`
 
