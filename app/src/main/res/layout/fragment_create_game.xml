@@ -154,6 +154,7 @@
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/colorPrimary"
         android:text="Create Match"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
