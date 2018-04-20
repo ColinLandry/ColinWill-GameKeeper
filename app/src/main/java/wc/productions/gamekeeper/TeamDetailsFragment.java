@@ -185,7 +185,8 @@ public class TeamDetailsFragment extends Fragment {
                 Intent teamEmailIntent = new Intent(Intent.ACTION_VIEW);
                 teamEmailIntent.setData(Uri.parse("mailto:"));  //Email App Only
                 teamEmailIntent.putExtra(Intent.EXTRA_EMAIL, emails);
-                teamEmailIntent.putExtra(Intent.EXTRA_SUBJECT, "Team Message");
+                teamEmailIntent.putExtra(Intent.EXTRA_SUBJECT, sharedPref.getString("subject","Team Message") );
+                teamEmailIntent.putExtra(Intent.EXTRA_TEXT, sharedPref.getString("emailBody","Hey Team"));
                 if (teamEmailIntent.resolveActivity(getActivity().getPackageManager())!= null){
                     startActivity(teamEmailIntent);
                 }
@@ -291,6 +292,7 @@ public class TeamDetailsFragment extends Fragment {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("mailto:" + players.get(location).getEmail()));  //Email App Only
                     intent.putExtra(Intent.EXTRA_SUBJECT, sharedPref.getString("greeting","Hello") + players.get(location).getName() + ",");
+                    intent.putExtra(Intent.EXTRA_TEXT, sharedPref.getString("emailBody","Hey Team"));
                     if (intent.resolveActivity(getActivity().getPackageManager())!= null){
                         startActivity(intent);
                     }
