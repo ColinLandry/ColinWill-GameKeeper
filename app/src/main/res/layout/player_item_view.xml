@@ -30,17 +30,17 @@
         <TextView
             android:id="@+id/playerName"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="3"
             android:gravity="center_vertical"
             android:text="Name"
             android:textAlignment="textStart"
             android:textColor="@android:color/background_light"
-            android:textSize="24sp"
+            android:textSize="@dimen/title_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/playerEmail"
+            app:layout_constraintEnd_toStartOf="@+id/playerPhone"
             app:layout_constraintStart_toEndOf="@+id/editPlayer"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -72,7 +72,7 @@
 
         <TextView
             android:id="@+id/playerEmail"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="2dp"
@@ -81,9 +81,11 @@
             android:text="Email"
             android:textAlignment="textEnd"
             android:textColor="@android:color/background_light"
+            android:textSize="@dimen/detail_text_size"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/emailPlayerButton"
+            app:layout_constraintStart_toEndOf="@+id/playerName"
             app:layout_constraintTop_toBottomOf="@+id/callPlayerButton" />
 
         <TextView
@@ -97,6 +99,7 @@
             android:text="Phone"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
+            android:textSize="@dimen/detail_text_size"
             android:textStyle="italic"
             app:layout_constraintEnd_toStartOf="@+id/callPlayerButton"
             app:layout_constraintTop_toTopOf="parent" />

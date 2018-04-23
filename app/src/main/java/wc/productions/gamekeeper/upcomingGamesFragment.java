@@ -1,6 +1,7 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,9 @@ public class upcomingGamesFragment extends Fragment {
     private String mParam2;
     Team team1;
     Team team2;
+
+
+
 
 
     private OnFragmentInteractionListener mListener;
@@ -68,6 +73,8 @@ public class upcomingGamesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
     FragmentManager fm;
     @Override
@@ -99,12 +106,46 @@ public class upcomingGamesFragment extends Fragment {
             }
         });
 
+
+
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.gamesViewPager);
         //Set the adapter
         final CustomPagerAdapter adapter = new CustomPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         //Setting the page transformer
         viewPager.setPageTransformer(true, new DepthPageTransformer());
+
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                final int location = viewPager.getCurrentItem();
+
+                //Alert to confirm
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure you want to delete " + adapter.list.get(location).getName() + "?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //Grab an instance of the database
+                                DatabaseHandler db = new DatabaseHandler(getContext());
+                                //Remove the team from the database
+                                int game = adapter.list.get(location).getId();
+                                db.deleteTeam(game);
+                                //Close the database
+                                db.close();
+
+                                //Refresh
+                                adapter.list.remove(location);
+                                viewPager.setAdapter(adapter);
+                            }
+                        })
+                        .setNegativeButton("No", null);
+                AlertDialog alert = builder.create();
+                alert.show();
+
+                return false;
+            }
+        });
         return view;
 
     }
@@ -121,8 +162,8 @@ public class upcomingGamesFragment extends Fragment {
 
         DatabaseHandler db = new DatabaseHandler(getContext());
 
-        final ArrayList<Team> test = db.getAllTeams();
-        final ArrayList<Game> list = db.getAllGames();
+        ArrayList<Game> list = db.getAllGames();
+
 
         @Override
         public Fragment getItem(int position) {

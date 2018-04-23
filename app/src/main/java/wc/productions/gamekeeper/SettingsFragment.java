@@ -75,6 +75,8 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         final EditText username = view.findViewById(R.id.userName);
         final EditText greeting = view.findViewById(R.id.customGreeting);
+        final EditText subject = view.findViewById(R.id.customSubject);
+        final EditText emailBody = view.findViewById(R.id.customBody);
         final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPref.edit();
         Button confirmButton = view.findViewById(R.id.confirmUserSettings);
@@ -82,12 +84,16 @@ public class SettingsFragment extends Fragment {
         //Set text of greetings edittext
         greeting.setText(sharedPref.getString("greeting", "Hello"));
         username.setText(sharedPref.getString("username", "User Name"));
+        subject.setText(sharedPref.getString("subject", "Update"));
+        emailBody.setText(sharedPref.getString("emailBody", "Hello"));
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editor.putString("username", username.getText().toString());
-                editor.putString("greeting", greeting.getText().toString() + " ");
+                editor.putString("greeting", greeting.getText().toString());
+                editor.putString("subject",subject.getText().toString());
+                editor.putString("emailBody",emailBody.getText().toString());
                 editor.apply();
 
                 MainActivity.navUsername.setText(sharedPref.getString("username", "User Name"));

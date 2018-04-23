@@ -3,10 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="wc.productions.gamekeeper.CreatePlayerFragment">
+    >
+
+
+
+
+
 
     <LinearLayout
-        android:id="@+id/nameLayout"
+        android:id="@+id/gameNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -18,103 +23,142 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/playerNameLabel"
+            android:id="@+id/gameNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Player Name"
-            android:textAlignment="center"
+            android:text="Name"
+            android:textAlignment="viewStart"
             android:textSize="@dimen/text_size"
-            tools:layout_editor_absoluteX="46dp"
-            tools:layout_editor_absoluteY="43dp" />
+            tools:layout_editor_absoluteX="43dp"
+            tools:layout_editor_absoluteY="46dp" />
 
         <EditText
-            android:id="@+id/playerNameInput"
+            android:id="@+id/gameName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="153dp"
-            tools:layout_editor_absoluteY="5dp" />
+            tools:layout_editor_absoluteX="93dp"
+            tools:layout_editor_absoluteY="16dp" />
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/phoneLayout"
+        android:id="@+id/gameDateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameLayout">
+        app:layout_constraintTop_toBottomOf="@+id/secondTeamLayout">
 
         <TextView
-            android:id="@+id/playerPhoneLabel"
+            android:id="@+id/gameDateLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Player Phone"
-            android:textAlignment="center"
+            android:text="Date"
+            android:textAlignment="textStart"
             android:textSize="@dimen/text_size"
-            tools:layout_editor_absoluteX="46dp"
-            tools:layout_editor_absoluteY="77dp" />
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="147dp" />
 
         <EditText
-            android:id="@+id/playerPhoneInput"
+            android:id="@+id/gameDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="phone"
-            tools:layout_editor_absoluteX="153dp"
-            tools:layout_editor_absoluteY="62dp" />
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="date"
+            tools:layout_editor_absoluteX="86dp"
+            tools:layout_editor_absoluteY="127dp" />
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/emailLayout"
+        android:id="@+id/secondTeamLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstTeamLayout">
+
+        <TextView
+            android:id="@+id/secondTeamLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Second Team:"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/text_size"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="103dp" />
+
+        <Spinner
+            android:id="@+id/secondTeamSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="3"
+            android:ems="10"
+            tools:layout_editor_absoluteX="133dp"
+            tools:layout_editor_absoluteY="103dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/firstTeamLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneLayout">
+        app:layout_constraintTop_toBottomOf="@+id/gameNameLayout">
 
         <TextView
-            android:id="@+id/playerEmailLabel"
+            android:id="@+id/firstTeamLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Player Email"
-            android:textAlignment="center"
+            android:text="First Team:"
+            android:textAlignment="textStart"
             android:textSize="@dimen/text_size"
-            tools:layout_editor_absoluteX="46dp"
-            tools:layout_editor_absoluteY="166dp" />
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="57dp" />
 
-        <EditText
-            android:id="@+id/playerEmailInput"
+        <Spinner
+            android:id="@+id/firstTeamSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:ems="10"
-            android:inputType="textEmailAddress"
-            tools:layout_editor_absoluteX="153dp"
-            tools:layout_editor_absoluteY="153dp" />
+            tools:layout_editor_absoluteX="106dp"
+            tools:layout_editor_absoluteY="57dp" />
+
     </LinearLayout>
 
     <Button
-        android:id="@+id/submitPlayer"
+        android:id="@+id/updateGameButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Add player"
+        android:text="Update Match"
         android:textAllCaps="false"
         android:textColor="@color/about_libraries_card"
         android:textSize="@dimen/text_size"

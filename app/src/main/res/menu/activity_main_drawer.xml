@@ -20,6 +20,11 @@
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_info_outline_black_24dp"
             android:title="Information" />
+
+        <item
+            android:id="@+id/nav_tweet"
+            android:icon="@drawable/ic_announcement_black_24dp"
+            android:title="Report A Bug" />
     </group>
 
 </menu>

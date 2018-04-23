@@ -2,12 +2,11 @@ package wc.productions.gamekeeper;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,21 +23,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import android.widget.Toast;
-
-import com.danimahardhika.cafebar.CafeBar;
-import com.danimahardhika.cafebar.CafeBarTheme;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CreateGameFragment.OnFragmentInteractionListener} interface
+ * {@link UpdateGameFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CreateGameFragment#newInstance} factory method to
+ * Use the {@link UpdateGameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateGameFragment extends Fragment {
+public class UpdateGameFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -47,15 +41,13 @@ public class CreateGameFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Calendar myCalendar = Calendar.getInstance();
-    Spinner spinTeamOne;
-    Spinner spinTeamTwo;
-    Button createGame;
-    EditText name;
-    EditText dateText;
     Team teamOne;
     Team teamTwo;
+    EditText dateText;
+    //Teams from the game item
+    private Game game;
     FragmentManager fm;
+    Calendar myCalendar = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -68,10 +60,9 @@ public class CreateGameFragment extends Fragment {
         }
     };
 
-
     private OnFragmentInteractionListener mListener;
 
-    public CreateGameFragment() {
+    public UpdateGameFragment() {
         // Required empty public constructor
     }
 
@@ -80,15 +71,13 @@ public class CreateGameFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateGameFragment.
+     * @return A new instance of fragment UpdateGameFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateGameFragment newInstance(String param1, String param2) {
-        CreateGameFragment fragment = new CreateGameFragment();
+    public static UpdateGameFragment newInstance(Parcelable param1) {
+        UpdateGameFragment fragment = new UpdateGameFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -97,28 +86,34 @@ public class CreateGameFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            game = getArguments().getParcelable(ARG_PARAM1);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_create_game, container, false);
-        MainActivity.fab.hide();
         // Inflate the layout for this fragment
-        spinTeamOne = view.findViewById(R.id.firstTeamSpinner);
-        spinTeamTwo = view.findViewById(R.id.secondTeamSpinner);
-        name = view.findViewById(R.id.gameName);
+        View view = inflater.inflate(R.layout.fragment_update_game, container, false);
+        MainActivity.fab.hide();
+        final Spinner spinTeamOne = view.findViewById(R.id.firstTeamSpinner);
+        Spinner spinTeamTwo = view.findViewById(R.id.secondTeamSpinner);
+        final EditText name = view.findViewById(R.id.gameName);
         dateText = view.findViewById(R.id.gameDate);
         DatabaseHandler db = new DatabaseHandler(getContext());
+
         final ArrayList<Team> list = db.getAllTeams();
         //Link the ArrayList with the spinner
         ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, list);
         spinTeamOne.setAdapter(adapter);
         spinTeamTwo.setAdapter(adapter);
-
+        //If the game object exists fill the fields
+        if (game != null) {
+            spinTeamOne.setSelection(game.getTeam1()-1);
+            spinTeamTwo.setSelection(game.getTeam2()-1);
+            name.setText(game.getName());
+            dateText.setText(game.getDate());
+        }
         spinTeamOne.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -151,41 +146,33 @@ public class CreateGameFragment extends Fragment {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
-        createGame = view.findViewById(R.id.submitGameButton);
-
-        createGame.setOnClickListener(new View.OnClickListener() {
+        //Edit Button
+        Button updateButton = view.findViewById(R.id.updateGameButton);
+        updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                game.setName(name.getText().toString());
+                game.setDate(dateText.getText().toString());
+                game.setTeam1(teamOne.getId());
+                game.setTeam2(teamTwo.getId());
 
-                if(name.getText().length() != 0 &&dateText.getText().length() != 0
-                        && teamOne.getName().length() != 0 && teamTwo.getName().length() != 0) {
-                    //Grab an instance of the database
-                    DatabaseHandler db = new DatabaseHandler(getContext());
-                    //Add the location to the database
-                    db.addGame(name.getText().toString(),
-                            dateText.getText().toString(),
-                            teamOne, teamTwo);
-                    //Close the database
-                    db.close();
-                    //Hide keyboard
-                    hideKeyboard();
+                //Grab an instance of the database
+                DatabaseHandler db = new DatabaseHandler(getContext());
 
-                    //Grab the fragment manager and move us back a page/fragment
-                    fm = getActivity().getSupportFragmentManager();
+                //Update the player in the database
+                db.updateGame(game);
 
+                //Close the database
+                db.close();
 
-                    fm.popBackStack();
-                }else{
-                    CafeBar.builder(getContext())
-                            .content("Please Fill Out All Fields")
-                            .floating(true)
-                            .fitSystemWindow()
-                            .theme(CafeBarTheme.Custom(Color.parseColor("#ffde59")))
-                            .show();
-                }
+                hideKeyboard();
+                //Grab the fragment manager and move us back a page/fragment
+                fm = getActivity().getSupportFragmentManager();
+                fm.popBackStack();
             }
         });
+
+        //Button submit = (Button) view.findViewById(R.id.updatePlayer);
 
         return view;
     }
@@ -214,6 +201,13 @@ public class CreateGameFragment extends Fragment {
         mListener = null;
     }
 
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        dateText.setText(sdf.format(myCalendar.getTime()));
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -227,13 +221,6 @@ public class CreateGameFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    private void updateLabel() {
-        String myFormat = "MM/dd/yy";
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-        dateText.setText(sdf.format(myCalendar.getTime()));
     }
 
     public void hideKeyboard() {
