@@ -24,6 +24,7 @@
             android:layout_weight="1"
             android:text="Player Name"
             android:textAlignment="center"
+            android:textSize="@dimen/text_size"
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="43dp" />
 
@@ -57,6 +58,7 @@
             android:layout_weight="1"
             android:text="Player Phone"
             android:textAlignment="center"
+            android:textSize="@dimen/text_size"
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="77dp" />
 
@@ -90,6 +92,7 @@
             android:layout_weight="1"
             android:text="Player Email"
             android:textAlignment="center"
+            android:textSize="@dimen/text_size"
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="166dp" />
 
@@ -113,6 +116,8 @@
         android:backgroundTint="@color/colorPrimary"
         android:text="Add player"
         android:textAllCaps="false"
+        android:textColor="@color/about_libraries_card"
+        android:textSize="@dimen/text_size"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

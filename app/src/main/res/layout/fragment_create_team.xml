@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Team Name"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="@dimen/text_size" />
 
         <EditText
             android:id="@+id/teamNameInput"
@@ -54,7 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Coach Name"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="@dimen/text_size" />
 
         <EditText
             android:id="@+id/teamCoachInput"
@@ -85,7 +87,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Add a team logo!"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="@dimen/text_size" />
 
         <ImageView
             android:id="@+id/addImageButton"
@@ -121,6 +124,8 @@
         android:backgroundTint="@color/colorPrimary"
         android:text="Create team!"
         android:textAllCaps="false"
+        android:textColor="@color/about_libraries_card"
+        android:textSize="@dimen/text_size"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 

@@ -42,7 +42,7 @@
             android:layout_marginTop="2dp"
             android:text="Team Name"
             android:textAlignment="center"
-            android:textSize="30sp"
+            android:textSize="@dimen/team_title_size"
             cardView:layout_constraintEnd_toEndOf="parent"
             cardView:layout_constraintHorizontal_bias="0.0"
             cardView:layout_constraintStart_toEndOf="@+id/teamLogoView"
@@ -56,6 +56,7 @@
             android:layout_marginStart="2dp"
             android:text="coach name"
             android:textAlignment="center"
+            android:textSize="@dimen/detail_text_size"
             cardView:layout_constraintEnd_toEndOf="parent"
             cardView:layout_constraintStart_toEndOf="@+id/teamLogoView"
             cardView:layout_constraintTop_toBottomOf="@+id/teamName" />

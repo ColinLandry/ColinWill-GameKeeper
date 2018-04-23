@@ -32,7 +32,7 @@
                 android:text="TextView"
                 android:textAlignment="center"
                 android:textColor="@color/cardview_light_background"
-                android:textSize="30sp" />
+                android:textSize="@dimen/team_title_size" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,6 +50,7 @@
                     android:text="TextView"
                     android:textAlignment="center"
                     android:textColor="@color/cardview_light_background"
+                    android:textSize="@dimen/text_size"
                     android:textStyle="italic"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -88,7 +89,7 @@
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
-        android:textSize="40sp"
+        android:textSize="@dimen/gametext_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/logoTeam1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +107,7 @@
         android:fontFamily="sans-serif"
         android:text="VS"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="@dimen/team_title_size"
         android:textStyle="bold|italic"
         android:typeface="serif"
         app:layout_constraintBottom_toTopOf="@+id/logoTeam2"
@@ -125,7 +126,7 @@
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
-        android:textSize="40sp"
+        android:textSize="@dimen/gametext_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/logoTeam2"
         app:layout_constraintEnd_toStartOf="@+id/logoTeam2"

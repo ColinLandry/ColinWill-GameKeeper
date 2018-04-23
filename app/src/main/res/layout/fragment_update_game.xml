@@ -29,6 +29,7 @@
             android:layout_weight="1"
             android:text="Name"
             android:textAlignment="viewStart"
+            android:textSize="@dimen/text_size"
             tools:layout_editor_absoluteX="43dp"
             tools:layout_editor_absoluteY="46dp" />
 
@@ -63,6 +64,7 @@
             android:layout_weight="1"
             android:text="Date"
             android:textAlignment="textStart"
+            android:textSize="@dimen/text_size"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="147dp" />
 
@@ -87,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +102,7 @@
             android:layout_weight="1"
             android:text="Second Team:"
             android:textAlignment="textStart"
+            android:textSize="@dimen/text_size"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="103dp" />
 
@@ -132,6 +136,7 @@
             android:layout_weight="1"
             android:text="First Team:"
             android:textAlignment="textStart"
+            android:textSize="@dimen/text_size"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="57dp" />
 
@@ -155,6 +160,8 @@
         android:backgroundTint="@color/colorPrimary"
         android:text="Update Match"
         android:textAllCaps="false"
+        android:textColor="@color/about_libraries_card"
+        android:textSize="@dimen/text_size"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -12,7 +12,8 @@
         android:id="@+id/userNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name:" />
+        android:text="Name:"
+        android:textSize="@dimen/text_size" />
 
     <EditText
         android:id="@+id/userName"
@@ -25,7 +26,8 @@
         android:id="@+id/greetingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Custom Greeting" />
+        android:text="Custom Greeting"
+        android:textSize="@dimen/text_size" />
 
     <EditText
         android:id="@+id/customGreeting"
@@ -39,7 +41,8 @@
         android:id="@+id/subjectLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Custom Subject" />
+        android:text="Custom Subject"
+        android:textSize="@dimen/text_size" />
 
     <EditText
         android:id="@+id/customSubject"
@@ -53,7 +56,8 @@
         android:id="@+id/bodyLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Custom Email Body" />
+        android:text="Custom Email Body"
+        android:textSize="@dimen/text_size" />
 
     <EditText
         android:id="@+id/customBody"
@@ -70,7 +74,9 @@
         android:layout_column="0"
         android:layout_columnSpan="2"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Confirm" />
+        android:text="Confirm"
+        android:textColor="@color/about_libraries_card"
+        android:textSize="@dimen/text_size" />
 
     <Button
         android:id="@+id/deleteAllButton"
@@ -80,6 +86,8 @@
         android:layout_columnSpan="2"
 
         android:backgroundTint="@color/colorPrimary"
-        android:text="Clear all Data" />
+        android:text="Clear all Data"
+        android:textColor="@color/about_libraries_card"
+        android:textSize="@dimen/text_size" />
 
 </GridLayout>

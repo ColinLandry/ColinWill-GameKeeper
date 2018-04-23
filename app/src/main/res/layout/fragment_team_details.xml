@@ -28,7 +28,7 @@
         android:text="Team Name"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="30sp"
+        android:textSize="@dimen/team_title_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/teamDetailsLogo"
@@ -43,6 +43,7 @@
         android:layout_marginStart="8dp"
         android:text="@string/coachTitlePlaceholder"
         android:textAlignment="center"
+        android:textSize="@dimen/detail_text_size"
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +69,8 @@
             android:layout_weight="1"
             android:backgroundTint="@color/colorPrimary"
             android:text="Text All"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textSize="@dimen/detail_text_size" />
 
         <Button
             android:id="@+id/emailAllPlayersButton"
@@ -77,7 +79,8 @@
             android:layout_weight="1"
             android:backgroundTint="@color/colorPrimary"
             android:text="Email All"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textSize="@dimen/detail_text_size" />
     </LinearLayout>
 
     <TextView
