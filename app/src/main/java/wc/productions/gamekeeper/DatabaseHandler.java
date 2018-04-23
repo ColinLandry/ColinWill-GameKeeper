@@ -447,6 +447,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(team.getId())});
     }
 
+    public int updateGame(Game game){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_GAMENAME, game.getName());
+        values.put(COLUMN_GAMEDATE, game.getDate());
+        values.put(COLUMN_GAMETEAM1, game.getTeam1());
+        values.put(COLUMN_GAMETEAM2, game.getTeam2());
+        return db.update(TABLE_GAMES, values, COLUMN_ID + "= ?",
+                new String[]{String.valueOf(game.getId())});
+    }
+
     //Update player
     public int updatePlayer(Player player){
         SQLiteDatabase db = getWritableDatabase();

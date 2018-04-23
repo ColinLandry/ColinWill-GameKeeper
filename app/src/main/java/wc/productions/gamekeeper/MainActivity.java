@@ -1,7 +1,10 @@
 package wc.productions.gamekeeper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
@@ -25,6 +29,8 @@ import com.mikepenz.aboutlibraries.ui.LibsFragment;
 import com.mikepenz.aboutlibraries.ui.LibsSupportFragment;
 
 import org.w3c.dom.Text;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
@@ -39,7 +45,8 @@ public class MainActivity extends AppCompatActivity
         CreatePlayerFragment.OnFragmentInteractionListener,
         MainFragment.OnFragmentInteractionListener,
         UpdatePlayerFragment.OnFragmentInteractionListener,
-        UpdateTeamFragment.OnFragmentInteractionListener {
+        UpdateTeamFragment.OnFragmentInteractionListener,
+        UpdateGameFragment.OnFragmentInteractionListener{
 
 
     FragmentManager fm;
@@ -117,7 +124,6 @@ public class MainActivity extends AppCompatActivity
         fm = getSupportFragmentManager();
         int id = item.getItemId();
         android.support.v4.app.FragmentTransaction tr = fm.beginTransaction();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             tr.replace(R.id.main_content, new SettingsFragment());
@@ -163,6 +169,29 @@ public class MainActivity extends AppCompatActivity
             tr.replace(R.id.main_content, fragment);
             tr.addToBackStack(null);
             tr.commit();
+        } else if (id == R.id.nav_tweet){
+            Intent tweetIntent = new Intent(Intent.ACTION_SEND);
+            tweetIntent.putExtra(Intent.EXTRA_TEXT, "This is a Test.");
+            tweetIntent.setType("text/plain");
+
+            PackageManager packManager = getPackageManager();
+            List<ResolveInfo> resolvedInfoList = packManager.queryIntentActivities(tweetIntent,  PackageManager.MATCH_DEFAULT_ONLY);
+
+            boolean resolved = false;
+            for(ResolveInfo resolveInfo: resolvedInfoList){
+                if(resolveInfo.activityInfo.packageName.startsWith("com.twitter.android")){
+                    tweetIntent.setClassName(
+                            resolveInfo.activityInfo.packageName,
+                            resolveInfo.activityInfo.name );
+                    resolved = true;
+                    break;
+                }
+            }
+            if(resolved){
+                startActivity(tweetIntent);
+            }else{
+                Toast.makeText(this, "Twitter app isn't found", Toast.LENGTH_LONG).show();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

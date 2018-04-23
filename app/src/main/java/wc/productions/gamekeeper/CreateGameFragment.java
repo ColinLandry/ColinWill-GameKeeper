@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,6 +170,7 @@ public class CreateGameFragment extends Fragment {
                     db.close();
                     //Hide keyboard
                     hideKeyboard();
+
                     //Grab the fragment manager and move us back a page/fragment
                     fm = getActivity().getSupportFragmentManager();
 

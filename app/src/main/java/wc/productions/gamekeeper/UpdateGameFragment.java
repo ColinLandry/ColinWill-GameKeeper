@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -43,9 +45,8 @@ public class UpdateGameFragment extends Fragment {
     Team teamTwo;
     EditText dateText;
     //Teams from the game item
-    Team teamOneEdit;
-    Team teamTwoEdit;
     private Game game;
+    FragmentManager fm;
     Calendar myCalendar = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -95,9 +96,9 @@ public class UpdateGameFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_update_game, container, false);
         MainActivity.fab.hide();
-        Spinner spinTeamOne = view.findViewById(R.id.firstTeamSpinner);
+        final Spinner spinTeamOne = view.findViewById(R.id.firstTeamSpinner);
         Spinner spinTeamTwo = view.findViewById(R.id.secondTeamSpinner);
-        EditText name = view.findViewById(R.id.gameName);
+        final EditText name = view.findViewById(R.id.gameName);
         dateText = view.findViewById(R.id.gameDate);
         DatabaseHandler db = new DatabaseHandler(getContext());
 
@@ -108,8 +109,8 @@ public class UpdateGameFragment extends Fragment {
         spinTeamTwo.setAdapter(adapter);
         //If the game object exists fill the fields
         if (game != null) {
-            spinTeamOne.setSelection(game.getTeam1());
-            spinTeamTwo.setSelection(game.getTeam2());
+            spinTeamOne.setSelection(game.getTeam1()-1);
+            spinTeamTwo.setSelection(game.getTeam2()-1);
             name.setText(game.getName());
             dateText.setText(game.getDate());
         }
@@ -143,6 +144,31 @@ public class UpdateGameFragment extends Fragment {
                 new DatePickerDialog(getContext(), date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+        //Edit Button
+        Button updateButton = view.findViewById(R.id.updateGameButton);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                game.setName(name.getText().toString());
+                game.setDate(dateText.getText().toString());
+                game.setTeam1(teamOne.getId());
+                game.setTeam2(teamTwo.getId());
+
+                //Grab an instance of the database
+                DatabaseHandler db = new DatabaseHandler(getContext());
+
+                //Update the player in the database
+                db.updateGame(game);
+
+                //Close the database
+                db.close();
+
+                hideKeyboard();
+                //Grab the fragment manager and move us back a page/fragment
+                fm = getActivity().getSupportFragmentManager();
+                fm.popBackStack();
             }
         });
 
@@ -195,5 +221,14 @@ public class UpdateGameFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void hideKeyboard() {
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }
