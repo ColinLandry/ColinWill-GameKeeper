@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +34,7 @@ public class viewPagerItemFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-
+    FragmentManager fm;
     private Game game;
     private Team team1;
     private Team team2;
@@ -126,6 +128,19 @@ public class viewPagerItemFragment extends Fragment {
                 if (intent.resolveActivity(getActivity().getPackageManager())!= null){
                     startActivity(intent);
                 }
+            }
+        });
+        //Passes the game to the edit fragment
+        ImageView editButton = view.findViewById(R.id.editGameButton);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fm = getFragmentManager();
+                UpdateGameFragment td = UpdateGameFragment.newInstance(game);
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.main_content, td);
+                ft.commit();
             }
         });
 
